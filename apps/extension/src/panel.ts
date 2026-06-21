@@ -42,7 +42,12 @@ async function send(type: 'ap:open-pwa' | 'ap:use-page' | 'ap:use-selection'): P
         setStatus(t('statusSent'), 'success');
       }
     } else {
-      setStatus(pageErrorMessage(String(response?.error ?? 'errorGeneric')), 'error');
+      setStatus(
+        pageErrorMessage(String(response?.error ?? 'errorGeneric'), {
+          url: String(response?.pwaUrl ?? 'http://localhost:4173/'),
+        }),
+        'error',
+      );
     }
   } catch (err) {
     console.error('[AccessPortal panel]', err);
