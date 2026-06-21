@@ -1,4 +1,5 @@
 import { loadLocale, saveLocale, type Locale } from './storage.js';
+import { getPreferences } from './profiles/preferences.js';
 
 export type MessageKey =
   | 'appSubtitle'
@@ -39,7 +40,31 @@ export type MessageKey =
   | 'errorEmpty'
   | 'errorGeneric'
   | 'summaryResultTitle'
-  | 'easyReadResultTitle';
+  | 'easyReadResultTitle'
+  | 'profileLabel'
+  | 'profileCognitive'
+  | 'profileVisual'
+  | 'profileMotor'
+  | 'profileComingSoon'
+  | 'fontSizeLabel'
+  | 'fontSizeNormal'
+  | 'fontSizeLarge'
+  | 'fontSizeXlarge'
+  | 'historyBtn'
+  | 'historyTitle'
+  | 'historyEmpty'
+  | 'historyClose'
+  | 'historyClearAll'
+  | 'historyClearConfirm'
+  | 'historyDelete'
+  | 'historyDeleteItem'
+  | 'historyOpenItem'
+  | 'historyModeSummary'
+  | 'historyModeEasyRead'
+  | 'visualPortalTitle'
+  | 'visualPortalBody'
+  | 'motorPortalTitle'
+  | 'motorPortalBody';
 
 const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
   en: {
@@ -53,7 +78,7 @@ const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     stateDownloading: 'Downloading on-device model…',
     stateDownloadingDetail: 'This may take a few minutes. Keep Chrome open.',
     stateReady: 'Local AI is ready',
-    stateReadyDetail: 'Opening cognitive portal…',
+    stateReadyDetail: 'Opening your accessibility portal…',
     stateUnavailable: 'On-device AI not available',
     stateUnavailableDetail:
       'This device or Chrome setup does not meet the requirements for Gemini Nano.',
@@ -87,6 +112,30 @@ const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     errorGeneric: 'Something went wrong. Try again.',
     summaryResultTitle: 'Key points summary',
     easyReadResultTitle: 'Easy-read version',
+    profileLabel: 'Accessibility profile',
+    profileCognitive: 'Cognitive',
+    profileVisual: 'Visual',
+    profileMotor: 'Motor',
+    profileComingSoon: 'Soon',
+    fontSizeLabel: 'Text size',
+    fontSizeNormal: 'Normal',
+    fontSizeLarge: 'Large',
+    fontSizeXlarge: 'Extra large',
+    historyBtn: 'History',
+    historyTitle: 'Adaptation history',
+    historyEmpty: 'No saved adaptations yet. Results are stored on this device only.',
+    historyClose: 'Close',
+    historyClearAll: 'Delete all history',
+    historyClearConfirm: 'Delete all saved adaptations on this device?',
+    historyDelete: 'Delete',
+    historyDeleteItem: 'Delete “{title}”',
+    historyOpenItem: 'Open “{title}”',
+    historyModeSummary: 'Summary',
+    historyModeEasyRead: 'Easy read',
+    visualPortalTitle: 'Visual profile',
+    visualPortalBody: 'Image description portal — coming in a future version.',
+    motorPortalTitle: 'Motor profile',
+    motorPortalBody: 'Voice and simplified forms — coming in a future version.',
   },
   es: {
     appSubtitle: 'By AI4Context',
@@ -99,7 +148,7 @@ const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     stateDownloading: 'Descargando modelo local…',
     stateDownloadingDetail: 'Puede tardar unos minutos. Mantén Chrome abierto.',
     stateReady: 'IA local lista',
-    stateReadyDetail: 'Abriendo portal cognitivo…',
+    stateReadyDetail: 'Abriendo tu portal de accesibilidad…',
     stateUnavailable: 'IA en dispositivo no disponible',
     stateUnavailableDetail:
       'Este equipo o configuración de Chrome no cumple los requisitos de Gemini Nano.',
@@ -133,6 +182,30 @@ const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     errorGeneric: 'Algo falló. Inténtalo de nuevo.',
     summaryResultTitle: 'Resumen en puntos clave',
     easyReadResultTitle: 'Versión en lectura fácil',
+    profileLabel: 'Perfil de accesibilidad',
+    profileCognitive: 'Cognitivo',
+    profileVisual: 'Visual',
+    profileMotor: 'Motor',
+    profileComingSoon: 'Pronto',
+    fontSizeLabel: 'Tamaño de texto',
+    fontSizeNormal: 'Normal',
+    fontSizeLarge: 'Grande',
+    fontSizeXlarge: 'Extra grande',
+    historyBtn: 'Historial',
+    historyTitle: 'Historial de adaptaciones',
+    historyEmpty: 'Aún no hay adaptaciones guardadas. Se almacenan solo en este dispositivo.',
+    historyClose: 'Cerrar',
+    historyClearAll: 'Borrar todo el historial',
+    historyClearConfirm: '¿Borrar todas las adaptaciones guardadas en este dispositivo?',
+    historyDelete: 'Eliminar',
+    historyDeleteItem: 'Eliminar “{title}”',
+    historyOpenItem: 'Abrir “{title}”',
+    historyModeSummary: 'Resumen',
+    historyModeEasyRead: 'Lectura fácil',
+    visualPortalTitle: 'Perfil visual',
+    visualPortalBody: 'Portal de descripción de imágenes — disponible en una versión futura.',
+    motorPortalTitle: 'Perfil motor',
+    motorPortalBody: 'Voz y formularios simplificados — disponible en una versión futura.',
   },
 };
 
@@ -146,6 +219,10 @@ export function getLocale(): Locale {
 
 export async function initI18n(): Promise<void> {
   currentLocale = loadLocale();
+}
+
+export async function initI18nFromPreferences(): Promise<void> {
+  currentLocale = getPreferences().locale;
 }
 
 export async function setLocale(locale: Locale): Promise<void> {
@@ -193,6 +270,18 @@ export function applyStaticTranslations(root: ParentNode = document): void {
     ['result-heading', 'resultHeading'],
     ['writing-indicator', 'writing'],
     ['support-link', 'footerSupport'],
+    ['profile-label', 'profileLabel'],
+    ['profile-cognitive-label', 'profileCognitive'],
+    ['profile-visual-label', 'profileVisual'],
+    ['profile-motor-label', 'profileMotor'],
+    ['profile-visual-soon', 'profileComingSoon'],
+    ['profile-motor-soon', 'profileComingSoon'],
+    ['font-size-label', 'fontSizeLabel'],
+    ['history-btn', 'historyBtn'],
+    ['visual-portal-title', 'visualPortalTitle'],
+    ['visual-portal-body', 'visualPortalBody'],
+    ['motor-portal-title', 'motorPortalTitle'],
+    ['motor-portal-body', 'motorPortalBody'],
   ];
 
   for (const [id, key] of map) {

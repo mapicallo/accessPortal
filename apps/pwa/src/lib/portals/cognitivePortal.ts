@@ -5,8 +5,11 @@ import {
   truncateForModel,
 } from '../ai/modelOptions.js';
 import { streamSummarizeKeyPoints } from '../ai/summarizer.js';
+import type { HistoryEntry } from '../db/indexedDb.js';
 import { getLocale, t } from '../i18n.js';
+import type { HistoryMode } from '../profiles/types.js';
 import { isPortalReady } from '../ui/modelStatus.js';
+import { saveToHistory } from '../ui/historyPanel.js';
 
 let abortController: AbortController | null = null;
 
@@ -90,14 +93,34 @@ function getInputText(requireSelectionForEasyRead: boolean): string | null {
   return raw;
 }
 
+function showResult(mode: HistoryMode, resultText: string): void {
+  const region = resultRegion();
+  const output = resultOutput();
+  const heading = resultHeading();
+
+  region?.removeAttribute('hidden');
+  if (heading) {
+    heading.textContent =
+      mode === 'summary' ? t('summaryResultTitle') : t('easyReadResultTitle');
+  }
+  if (output) output.textContent = resultText;
+}
+
+export function loadHistoryEntry(entry: HistoryEntry): void {
+  const ta = sourceTextarea();
+  if (ta) ta.value = entry.sourceText;
+  updateCharHint();
+  showResult(entry.mode, entry.resultText);
+  ta?.focus();
+}
+
 async function runTask(
   mode: 'summary' | 'easyRead',
   titleKey: 'summaryResultTitle' | 'easyReadResultTitle',
 ): Promise<void> {
   if (!isPortalReady()) return;
 
-  const raw =
-    mode === 'easyRead' ? getInputText(true) : getInputText(false);
+  const raw = mode === 'easyRead' ? getInputText(true) : getInputText(false);
   if (!raw) {
     alert(t('errorEmpty'));
     return;
@@ -122,18 +145,23 @@ async function runTask(
     hint.classList.add('is-warn');
   }
 
+  let resultText = '';
+
   try {
     const locale = getLocale();
     const signal = abortController.signal;
     const onUpdate = (accumulated: string) => {
+      resultText = accumulated;
       if (output) output.textContent = accumulated;
     };
 
     if (mode === 'summary') {
-      await streamSummarizeKeyPoints(text, locale, onUpdate, signal);
+      resultText = await streamSummarizeKeyPoints(text, locale, onUpdate, signal);
     } else {
-      await streamEasyRead(text, locale, onUpdate, signal);
+      resultText = await streamEasyRead(text, locale, onUpdate, signal);
     }
+
+    await saveToHistory({ mode, sourceText: text, resultText });
   } catch (err) {
     if ((err as Error)?.name === 'AbortError') return;
     console.error('[AccessPortal] cognitive task', err);
@@ -165,8 +193,4 @@ export function initCognitivePortal(): void {
 
 export function refreshCognitiveLabels(): void {
   updateCharHint();
-  const heading = resultHeading();
-  if (heading && !resultRegion()?.hasAttribute('hidden')) {
-    /* keep current result title if showing */
-  }
 }

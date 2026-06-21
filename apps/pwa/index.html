@@ -86,57 +86,135 @@
           </button>
         </section>
 
-        <section id="cognitive-portal" class="ap-portal ap-portal-cognitive" hidden>
-          <div id="ap-ready-strip" class="ap-ready-strip">
-            <span class="ap-ready-strip-icon" aria-hidden="true">✓</span>
-            <span id="ready-strip-label" class="ap-ready-strip-label">Local AI is ready</span>
-          </div>
+        <div id="portal-shell" class="ap-portal-shell" hidden>
+          <div class="ap-portal-toolbar">
+            <fieldset class="ap-profile-fieldset">
+              <legend id="profile-label" class="ap-toolbar-legend">Accessibility profile</legend>
+              <div class="ap-profile-options" role="radiogroup" aria-labelledby="profile-label">
+                <label class="ap-profile-option">
+                  <input type="radio" name="profile" value="cognitive" checked />
+                  <span id="profile-cognitive-label">Cognitive</span>
+                </label>
+                <label class="ap-profile-option is-soon">
+                  <input type="radio" name="profile" value="visual" disabled aria-describedby="profile-visual-soon" />
+                  <span id="profile-visual-label">Visual</span>
+                  <span id="profile-visual-soon" class="ap-soon-badge">Soon</span>
+                </label>
+                <label class="ap-profile-option is-soon">
+                  <input type="radio" name="profile" value="motor" disabled aria-describedby="profile-motor-soon" />
+                  <span id="profile-motor-label">Motor</span>
+                  <span id="profile-motor-soon" class="ap-soon-badge">Soon</span>
+                </label>
+              </div>
+            </fieldset>
 
-          <p class="ap-portal-intro" id="cognitive-intro">
-            Paste text you want to understand more easily. Processing stays on this device.
-          </p>
+            <label class="ap-font-size-control" for="font-size-select">
+              <span id="font-size-label" class="ap-toolbar-legend">Text size</span>
+              <select id="font-size-select" aria-labelledby="font-size-label">
+                <option value="normal" data-i18n="fontSizeNormal">Normal</option>
+                <option value="large" data-i18n="fontSizeLarge">Large</option>
+                <option value="xlarge" data-i18n="fontSizeXlarge">Extra large</option>
+              </select>
+            </label>
 
-          <div class="ap-disclaimer" role="note" id="ai-disclaimer">
-            AI may make mistakes. Always check the original text for important decisions.
-          </div>
-
-          <label class="ap-field-label" for="source-text" id="source-label">Your text</label>
-          <textarea
-            id="source-text"
-            class="ap-textarea ap-cognitive-input"
-            rows="10"
-            spellcheck="true"
-            aria-describedby="char-hint ai-disclaimer"
-          ></textarea>
-          <p class="ap-char-hint" id="char-hint" aria-live="polite"></p>
-
-          <div class="ap-action-row">
-            <button type="button" id="summarize-btn" class="ap-btn ap-btn-primary">
-              Summarize key points
+            <button type="button" id="history-btn" class="ap-btn ap-btn-ghost ap-history-trigger">
+              History
             </button>
-            <button type="button" id="easy-read-btn" class="ap-btn ap-btn-secondary">
-              Simplify selection
-            </button>
-            <button type="button" id="stop-btn" class="ap-btn ap-btn-ghost" hidden disabled>
-              Stop
-            </button>
           </div>
 
-          <div id="result-region" class="ap-result-region" hidden>
-            <h2 class="ap-result-heading" id="result-heading">Result</h2>
-            <p class="ap-writing" id="writing-indicator" hidden aria-live="polite">Writing…</p>
-            <article
-              id="result-output"
-              class="ap-result-output ap-cognitive-output"
-              aria-live="polite"
-              aria-atomic="true"
-            ></article>
+          <section id="cognitive-portal" class="ap-portal ap-portal-cognitive">
+            <div id="ap-ready-strip" class="ap-ready-strip">
+              <span class="ap-ready-strip-icon" aria-hidden="true">✓</span>
+              <span id="ready-strip-label" class="ap-ready-strip-label">Local AI is ready</span>
+            </div>
+
+            <p class="ap-portal-intro" id="cognitive-intro">
+              Paste text you want to understand more easily. Processing stays on this device.
+            </p>
+
+            <div class="ap-disclaimer" role="note" id="ai-disclaimer">
+              AI may make mistakes. Always check the original text for important decisions.
+            </div>
+
+            <label class="ap-field-label" for="source-text" id="source-label">Your text</label>
+            <textarea
+              id="source-text"
+              class="ap-textarea ap-cognitive-input"
+              rows="10"
+              spellcheck="true"
+              aria-describedby="char-hint ai-disclaimer"
+            ></textarea>
+            <p class="ap-char-hint" id="char-hint" aria-live="polite"></p>
+
+            <div class="ap-action-row">
+              <button type="button" id="summarize-btn" class="ap-btn ap-btn-primary">
+                Summarize key points
+              </button>
+              <button type="button" id="easy-read-btn" class="ap-btn ap-btn-secondary">
+                Simplify selection
+              </button>
+              <button type="button" id="stop-btn" class="ap-btn ap-btn-ghost" hidden disabled>
+                Stop
+              </button>
+            </div>
+
+            <div id="result-region" class="ap-result-region" hidden>
+              <h2 class="ap-result-heading" id="result-heading">Result</h2>
+              <p class="ap-writing" id="writing-indicator" hidden aria-live="polite">Writing…</p>
+              <article
+                id="result-output"
+                class="ap-result-output ap-cognitive-output"
+                aria-live="polite"
+                aria-atomic="true"
+              ></article>
+            </div>
+          </section>
+
+          <section id="visual-portal" class="ap-portal ap-portal-placeholder" hidden>
+            <h2 class="ap-placeholder-title" id="visual-portal-title">Visual profile</h2>
+            <p class="ap-placeholder-body" id="visual-portal-body">
+              Image description portal — coming in a future version.
+            </p>
+          </section>
+
+          <section id="motor-portal" class="ap-portal ap-portal-placeholder" hidden>
+            <h2 class="ap-placeholder-title" id="motor-portal-title">Motor profile</h2>
+            <p class="ap-placeholder-body" id="motor-portal-body">
+              Voice and simplified forms — coming in a future version.
+            </p>
+          </section>
+        </div>
+
+        <aside
+          id="history-panel"
+          class="ap-history-panel"
+          hidden
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="history-title"
+        >
+          <div class="ap-history-panel-inner">
+            <header class="ap-history-header">
+              <h2 id="history-title" class="ap-history-heading">Adaptation history</h2>
+              <button type="button" id="history-close-btn" class="ap-btn ap-btn-ghost">
+                Close
+              </button>
+            </header>
+            <p id="history-empty" class="ap-history-empty" hidden>
+              No saved adaptations yet. Results are stored on this device only.
+            </p>
+            <ul id="history-list" class="ap-history-list"></ul>
+            <footer class="ap-history-footer">
+              <button type="button" id="history-clear-btn" class="ap-btn ap-btn-ghost">
+                Delete all history
+              </button>
+            </footer>
           </div>
-        </section>
+        </aside>
       </main>
 
       <footer class="ap-footer">
-        <span id="version-strip" class="ap-version">v0.2.0</span>
+        <span id="version-strip" class="ap-version">v0.3.0</span>
         <span class="ap-footer-sep" aria-hidden="true">·</span>
         <a
           id="support-link"

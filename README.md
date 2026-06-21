@@ -8,7 +8,7 @@ Parte del ecosistema [AI4Context](https://www.ai4context.com).
 
 ## Estado
 
-**v0.2.0** — Fases 0–2 completadas: bootstrap PWA, chequeo de modelo, portal cognitivo (resumen + lectura fácil).
+**v0.3.0** — Fases 0–3: bootstrap PWA, portal cognitivo, persistencia IndexedDB, perfiles e historial.
 
 Ver [docs/IMPLEMENTATION_PLAN.md](docs/IMPLEMENTATION_PLAN.md) para el roadmap completo.
 

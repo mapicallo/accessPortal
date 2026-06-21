@@ -10,6 +10,7 @@ import {
   type ModelUiState,
 } from '../ai/languageModel.js';
 import { applyStaticTranslations, getLocale, t, type MessageKey } from '../i18n.js';
+import { showPortalShell, hidePortalShell } from '../profiles/selector.js';
 
 export type ModelStatusController = {
   refreshTranslations: () => void;
@@ -17,7 +18,6 @@ export type ModelStatusController = {
 };
 
 const statusSection = () => document.getElementById('model-status');
-const cognitivePortal = () => document.getElementById('cognitive-portal');
 const statusTitle = () => document.getElementById('status-title');
 const statusDetail = () => document.getElementById('status-detail');
 const progressWrap = () => document.getElementById('progress-wrap');
@@ -46,7 +46,7 @@ function markPortalReady(): void {
   setUiState('ready');
   setStatus('stateReady', 'stateReadyDetail');
   statusSection()?.setAttribute('hidden', '');
-  cognitivePortal()?.removeAttribute('hidden');
+  showPortalShell();
   readyResolve?.();
 }
 
@@ -137,7 +137,7 @@ async function runCheckFlow(): Promise<void> {
     setUiState('checking');
     setStatus('stateChecking', 'stateCheckingDetail');
     statusSection()?.removeAttribute('hidden');
-    cognitivePortal()?.setAttribute('hidden', '');
+    hidePortalShell();
 
     if (!hasBuiltInAiApi()) {
       setUiState('no-api');
