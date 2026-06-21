@@ -46,7 +46,8 @@ function formatWhen(ts: number, locale: string): string {
 function modeLabel(mode: HistoryMode): string {
   if (mode === 'summary') return t('historyModeSummary');
   if (mode === 'easyRead') return t('historyModeEasyRead');
-  return t('historyModeDescribe');
+  if (mode === 'describe') return t('historyModeDescribe');
+  return t('historyModeMotorNote');
 }
 
 function renderList(entries: HistoryEntry[]): void {

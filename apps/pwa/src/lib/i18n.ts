@@ -93,7 +93,25 @@ export type MessageKey =
   | 'errorImageUnsupported'
   | 'errorImageFailed'
   | 'importBannerPage'
-  | 'importBannerSelection';
+  | 'importBannerSelection'
+  | 'motorIntro'
+  | 'motorSpeechDisclaimer'
+  | 'motorStartDictation'
+  | 'motorStopDictation'
+  | 'motorStructureBtn'
+  | 'motorTranscriptLabel'
+  | 'motorDictationIdle'
+  | 'motorDictationListening'
+  | 'motorDictationUnsupported'
+  | 'motorDictationError'
+  | 'motorErrorEmptyTranscript'
+  | 'motorStructureDone'
+  | 'motorFormHeading'
+  | 'motorNoteTitleLabel'
+  | 'motorNoteBodyLabel'
+  | 'motorClearBtn'
+  | 'motorHistoryLoaded'
+  | 'historyModeMotorNote';
 
 const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
   en: {
@@ -195,6 +213,26 @@ const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     errorImageFailed: 'Could not load this image. Try another file.',
     importBannerPage: 'Page sent from extension',
     importBannerSelection: 'Selection sent from extension',
+    motorIntro:
+      'Use voice to draft an accessibility note inside AccessPortal. Large buttons, few steps.',
+    motorSpeechDisclaimer:
+      'Dictation may use your browser or operating system speech service — not always fully offline.',
+    motorStartDictation: 'Start dictation',
+    motorStopDictation: 'Stop dictation',
+    motorStructureBtn: 'Fill form with AI',
+    motorTranscriptLabel: 'Dictation transcript',
+    motorDictationIdle: 'Ready to dictate.',
+    motorDictationListening: 'Listening… speak clearly.',
+    motorDictationUnsupported: 'Speech recognition is not available in this browser.',
+    motorDictationError: 'Dictation stopped due to an error. Try again.',
+    motorErrorEmptyTranscript: 'Dictate or type some text first.',
+    motorStructureDone: 'Form filled. Review and edit before use.',
+    motorFormHeading: 'Accessibility note',
+    motorNoteTitleLabel: 'Title',
+    motorNoteBodyLabel: 'Body',
+    motorClearBtn: 'Clear form',
+    motorHistoryLoaded: 'Note loaded from history.',
+    historyModeMotorNote: 'Accessibility note',
   },
   es: {
     appSubtitle: 'By AI4Context',
@@ -295,6 +333,26 @@ const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     errorImageFailed: 'No se pudo cargar esta imagen. Prueba con otra.',
     importBannerPage: 'Página enviada desde la extensión',
     importBannerSelection: 'Selección enviada desde la extensión',
+    motorIntro:
+      'Usa la voz para redactar una nota de accesibilidad dentro de AccessPortal. Botones grandes, pocos pasos.',
+    motorSpeechDisclaimer:
+      'El dictado puede usar el servicio de voz del navegador o del sistema — no siempre totalmente offline.',
+    motorStartDictation: 'Iniciar dictado',
+    motorStopDictation: 'Detener dictado',
+    motorStructureBtn: 'Rellenar formulario con IA',
+    motorTranscriptLabel: 'Transcripción del dictado',
+    motorDictationIdle: 'Listo para dictar.',
+    motorDictationListening: 'Escuchando… habla con claridad.',
+    motorDictationUnsupported: 'El reconocimiento de voz no está disponible en este navegador.',
+    motorDictationError: 'El dictado se detuvo por un error. Inténtalo de nuevo.',
+    motorErrorEmptyTranscript: 'Dicta o escribe texto primero.',
+    motorStructureDone: 'Formulario rellenado. Revísalo y edítalo antes de usarlo.',
+    motorFormHeading: 'Nota de accesibilidad',
+    motorNoteTitleLabel: 'Título',
+    motorNoteBodyLabel: 'Cuerpo',
+    motorClearBtn: 'Limpiar formulario',
+    motorHistoryLoaded: 'Nota cargada del historial.',
+    historyModeMotorNote: 'Nota de accesibilidad',
   },
 };
 

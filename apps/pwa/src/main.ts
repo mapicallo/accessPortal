@@ -1,6 +1,7 @@
 import './styles/base.css';
 import './styles/profiles/cognitive.css';
 import './styles/profiles/visual.css';
+import './styles/profiles/motor.css';
 import type { HistoryEntry } from './lib/db/indexedDb.js';
 import { initDb } from './lib/db/indexedDb.js';
 import {
@@ -16,6 +17,11 @@ import {
   initCognitivePortal,
   refreshCognitiveLabels,
 } from './lib/portals/cognitivePortal.js';
+import {
+  initMotorPortal,
+  loadMotorHistoryEntry,
+  refreshMotorLabels,
+} from './lib/portals/motorPortal.js';
 import {
   initVisualPortal,
   loadVisualHistoryEntry,
@@ -50,6 +56,10 @@ function openHistoryEntry(entry: HistoryEntry): void {
     void selectProfile('visual').then(() => loadVisualHistoryEntry(entry));
     return;
   }
+  if (entry.profile === 'motor' || entry.mode === 'motorNote') {
+    void selectProfile('motor').then(() => loadMotorHistoryEntry(entry));
+    return;
+  }
   void selectProfile('cognitive').then(() => loadCognitiveHistoryEntry(entry));
 }
 
@@ -59,6 +69,7 @@ function refreshAllLabels(): void {
   refreshHistoryLabels();
   refreshCognitiveLabels();
   refreshVisualLabels();
+  refreshMotorLabels();
 }
 
 function handleExtensionImport(payload: ExtensionImportPayload): void {
@@ -75,6 +86,7 @@ async function boot(): Promise<void> {
   const modelStatus = initModelStatus();
   initCognitivePortal();
   initVisualPortal();
+  initMotorPortal();
   initExtensionImport(handleExtensionImport);
 
   void modelStatus.whenReady().then(async () => {

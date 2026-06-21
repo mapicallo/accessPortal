@@ -182,5 +182,9 @@ export function historyTitleForEntry(
     const name = sourceText.trim() || (locale === 'es' ? 'Imagen' : 'Image');
     return name.length > 72 ? `${name.slice(0, 69)}…` : name;
   }
+  if (mode === 'motorNote') {
+    const title = sourceText.trim() || (locale === 'es' ? 'Nota de accesibilidad' : 'Accessibility note');
+    return title.length > 72 ? `${title.slice(0, 69)}…` : title;
+  }
   return historyTitleFromText(sourceText, locale);
 }

@@ -8,7 +8,7 @@ Parte del ecosistema [AI4Context](https://www.ai4context.com).
 
 ## Estado
 
-**v0.6.0** — PWA + extensión Chrome compañera (envío de página/selección a la PWA).
+**v0.7.0** — Tres perfiles activos (cognitivo, visual, motor) + extensión Chrome compañera.
 
 Ver [docs/IMPLEMENTATION_PLAN.md](docs/IMPLEMENTATION_PLAN.md) para el roadmap completo.
 
@@ -50,6 +50,12 @@ Empaqueta con `npm run pack` → `AccessPortal-extension-v0.6.0.zip`.
 Flujo: en un artículo web → icono AccessPortal → **Usar esta página** → confirma en la página → se abre la PWA con el texto cargado.
 
 La extensión usa `http://localhost:4173/` por defecto. Producción: `https://www.ai4context.com/web-extensions/access-portal/` (configurable vía `chrome.storage.sync`, clave `ap_pwa_base_url`).
+
+### Perfil motor — dictado
+
+- **Web Speech API** para transcribir voz (puede usar servicios del navegador/SO; no es 100 % offline).
+- **Gemini Nano** estructura la transcripción en el formulario interno “Nota de accesibilidad” (título + cuerpo).
+- No rellena formularios de otras webs — solo flujos dentro del portal.
 
 ## Estructura
 

@@ -99,10 +99,9 @@
                   <input type="radio" name="profile" value="visual" />
                   <span id="profile-visual-label">Visual</span>
                 </label>
-                <label class="ap-profile-option is-soon">
-                  <input type="radio" name="profile" value="motor" disabled aria-describedby="profile-motor-soon" />
+                <label class="ap-profile-option">
+                  <input type="radio" name="profile" value="motor" />
                   <span id="profile-motor-label">Motor</span>
-                  <span id="profile-motor-soon" class="ap-soon-badge">Soon</span>
                 </label>
               </div>
             </fieldset>
@@ -266,11 +265,84 @@
             </div>
           </section>
 
-          <section id="motor-portal" class="ap-portal ap-portal-placeholder" hidden>
-            <h2 class="ap-placeholder-title" id="motor-portal-title">Motor profile</h2>
-            <p class="ap-placeholder-body" id="motor-portal-body">
-              Voice and simplified forms — coming in a future version.
+          <section id="motor-portal" class="ap-portal ap-portal-motor" hidden>
+            <div class="ap-ready-strip">
+              <span class="ap-ready-strip-icon" aria-hidden="true">✓</span>
+              <span id="motor-ready-label" class="ap-ready-strip-label">Local AI is ready</span>
+            </div>
+
+            <p class="ap-portal-intro" id="motor-intro">
+              Use voice to draft an accessibility note inside AccessPortal. Large buttons, few steps.
             </p>
+
+            <p class="ap-motor-speech-note" id="motor-speech-note" role="note">
+              Dictation may use your browser or operating system speech service — not always fully offline.
+            </p>
+
+            <div class="ap-motor-dictation-row">
+              <button type="button" id="motor-start-dictation-btn" class="ap-btn ap-btn-primary">
+                Start dictation
+              </button>
+              <button type="button" id="motor-stop-dictation-btn" class="ap-btn ap-btn-secondary" hidden>
+                Stop dictation
+              </button>
+              <button type="button" id="motor-structure-btn" class="ap-btn ap-btn-secondary">
+                Fill form with AI
+              </button>
+            </div>
+
+            <p id="motor-dictation-status" class="ap-motor-status" aria-live="polite"></p>
+            <p id="motor-writing-indicator" class="ap-motor-writing" hidden aria-live="polite">Writing…</p>
+
+            <label class="ap-motor-transcript-label" for="motor-transcript" id="motor-transcript-label">
+              Dictation transcript
+            </label>
+            <textarea
+              id="motor-transcript"
+              class="ap-motor-transcript"
+              rows="5"
+              spellcheck="true"
+              aria-describedby="motor-speech-note"
+            ></textarea>
+
+            <form id="motor-note-form" class="ap-motor-form" onsubmit="return false">
+              <h2 id="motor-form-heading" class="ap-result-heading">Accessibility note</h2>
+
+              <div>
+                <label class="ap-motor-field-label" for="motor-note-title" id="motor-note-title-label">
+                  Title
+                </label>
+                <input
+                  type="text"
+                  id="motor-note-title"
+                  class="ap-motor-input"
+                  maxlength="200"
+                  autocomplete="off"
+                />
+              </div>
+
+              <div>
+                <label class="ap-motor-field-label" for="motor-note-body" id="motor-note-body-label">
+                  Body
+                </label>
+                <textarea
+                  id="motor-note-body"
+                  class="ap-motor-textarea"
+                  rows="8"
+                  spellcheck="true"
+                ></textarea>
+              </div>
+
+              <div class="ap-motor-form-actions">
+                <button type="button" id="motor-clear-btn" class="ap-btn ap-btn-ghost">Clear form</button>
+                <button type="button" id="motor-copy-note-btn" class="ap-btn ap-btn-secondary">
+                  Copy result
+                </button>
+                <button type="button" id="motor-download-note-btn" class="ap-btn ap-btn-secondary">
+                  Download .txt
+                </button>
+              </div>
+            </form>
           </section>
         </div>
 
@@ -303,7 +375,7 @@
       </main>
 
       <footer class="ap-footer">
-        <span id="version-strip" class="ap-version">v0.6.0</span>
+        <span id="version-strip" class="ap-version">v0.7.0</span>
         <span class="ap-footer-sep" aria-hidden="true">·</span>
         <a
           id="support-link"
