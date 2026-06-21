@@ -365,6 +365,35 @@ body {
   font-weight: 600;
 }
 
+.ap-source-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  margin-bottom: 14px;
+}
+
+.ap-file-label {
+  margin: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ap-file-label.is-disabled {
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.ap-file-hint {
+  margin: 0;
+  flex: 1 1 12rem;
+  font-size: calc(0.85rem * var(--ap-font-scale));
+  color: var(--ap-muted);
+  line-height: 1.45;
+}
+
 .ap-action-row {
   display: flex;
   flex-wrap: wrap;
@@ -380,6 +409,22 @@ body {
 .ap-result-heading {
   margin: 0 0 8px;
   font-size: 1rem;
+}
+
+.ap-result-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.ap-copy-status {
+  margin: 0;
+  flex: 1 1 100%;
+  font-size: calc(0.85rem * var(--ap-font-scale));
+  color: #1e7e34;
+  min-height: 1.25rem;
 }
 
 .ap-writing {

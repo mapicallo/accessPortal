@@ -64,7 +64,20 @@ export type MessageKey =
   | 'visualPortalTitle'
   | 'visualPortalBody'
   | 'motorPortalTitle'
-  | 'motorPortalBody';
+  | 'motorPortalBody'
+  | 'attachDocument'
+  | 'attachDocumentHint'
+  | 'documentAttachedHint'
+  | 'errorFileTooLarge'
+  | 'errorFileUnsupported'
+  | 'errorFileEmpty'
+  | 'errorPdfFailed'
+  | 'errorFileRead'
+  | 'copyResultBtn'
+  | 'downloadResultBtn'
+  | 'copyResultDone'
+  | 'copyResultFailed'
+  | 'stoppedPartial';
 
 const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
   en: {
@@ -97,7 +110,7 @@ const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     docsLink: 'Chrome built-in AI docs',
     footerSupport: 'Support',
     cognitiveIntro:
-      'Paste text you want to understand more easily. Processing stays on this device.',
+      'Paste text or attach a document (.txt, .md, .pdf). Processing stays on this device.',
     aiDisclaimer:
       'AI may make mistakes. Always check the original text for important decisions.',
     sourceLabel: 'Your text',
@@ -136,6 +149,19 @@ const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     visualPortalBody: 'Image description portal — coming in a future version.',
     motorPortalTitle: 'Motor profile',
     motorPortalBody: 'Voice and simplified forms — coming in a future version.',
+    attachDocument: 'Attach document',
+    attachDocumentHint: 'Pick a local PDF or text file. Text is extracted on this device only.',
+    documentAttachedHint: 'Document “{name}” loaded. You can summarize or simplify it.',
+    errorFileTooLarge: 'File is too large. Try a smaller file (max ~16 MB).',
+    errorFileUnsupported: 'Unsupported file type. Use PDF, .txt, or .md.',
+    errorFileEmpty: 'No readable text found in this file.',
+    errorPdfFailed: 'Could not read this PDF. Try a text export or another file.',
+    errorFileRead: 'Could not read this file. Try again with another file.',
+    copyResultBtn: 'Copy result',
+    downloadResultBtn: 'Download .txt',
+    copyResultDone: 'Result copied to clipboard.',
+    copyResultFailed: 'Could not copy. Select the text and copy manually.',
+    stoppedPartial: 'Stopped. Partial result is shown below.',
   },
   es: {
     appSubtitle: 'By AI4Context',
@@ -167,7 +193,7 @@ const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     docsLink: 'Documentación de IA integrada en Chrome',
     footerSupport: 'Soporte',
     cognitiveIntro:
-      'Pega texto que quieras entender con más facilidad. El procesamiento se queda en este dispositivo.',
+      'Pega texto o adjunta un documento (.txt, .md, .pdf). El procesamiento se queda en este dispositivo.',
     aiDisclaimer:
       'La IA puede equivocarse. Consulta siempre el texto original para decisiones importantes.',
     sourceLabel: 'Tu texto',
@@ -206,6 +232,19 @@ const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     visualPortalBody: 'Portal de descripción de imágenes — disponible en una versión futura.',
     motorPortalTitle: 'Perfil motor',
     motorPortalBody: 'Voz y formularios simplificados — disponible en una versión futura.',
+    attachDocument: 'Adjuntar documento',
+    attachDocumentHint: 'Elige un PDF o archivo de texto local. El texto se extrae solo en este dispositivo.',
+    documentAttachedHint: 'Documento “{name}” cargado. Puedes resumirlo o simplificarlo.',
+    errorFileTooLarge: 'Archivo demasiado grande. Prueba uno más pequeño (máx. ~16 MB).',
+    errorFileUnsupported: 'Tipo de archivo no admitido. Usa PDF, .txt o .md.',
+    errorFileEmpty: 'No se encontró texto legible en este archivo.',
+    errorPdfFailed: 'No se pudo leer este PDF. Prueba una exportación a texto u otro archivo.',
+    errorFileRead: 'No se pudo leer este archivo. Prueba con otro.',
+    copyResultBtn: 'Copiar resultado',
+    downloadResultBtn: 'Descargar .txt',
+    copyResultDone: 'Resultado copiado al portapapeles.',
+    copyResultFailed: 'No se pudo copiar. Selecciona el texto y cópialo manualmente.',
+    stoppedPartial: 'Detenido. El resultado parcial aparece abajo.',
   },
 };
 
@@ -282,6 +321,9 @@ export function applyStaticTranslations(root: ParentNode = document): void {
     ['visual-portal-body', 'visualPortalBody'],
     ['motor-portal-title', 'motorPortalTitle'],
     ['motor-portal-body', 'motorPortalBody'],
+    ['attach-document-label', 'attachDocument'],
+    ['copy-result-btn', 'copyResultBtn'],
+    ['download-result-btn', 'downloadResultBtn'],
   ];
 
   for (const [id, key] of map) {

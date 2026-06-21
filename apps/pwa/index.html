@@ -136,6 +136,20 @@
               AI may make mistakes. Always check the original text for important decisions.
             </div>
 
+            <div class="ap-source-toolbar">
+              <label class="ap-btn ap-btn-secondary ap-file-label" for="document-input">
+                <span id="attach-document-label">Attach document</span>
+              </label>
+              <input
+                type="file"
+                id="document-input"
+                class="ap-file-input"
+                accept=".txt,.md,.markdown,.pdf,text/plain,text/markdown,application/pdf"
+                hidden
+              />
+              <p id="document-hint" class="ap-file-hint" aria-live="polite"></p>
+            </div>
+
             <label class="ap-field-label" for="source-text" id="source-label">Your text</label>
             <textarea
               id="source-text"
@@ -167,6 +181,15 @@
                 aria-live="polite"
                 aria-atomic="true"
               ></article>
+              <div id="result-actions" class="ap-result-actions" hidden>
+                <button type="button" id="copy-result-btn" class="ap-btn ap-btn-secondary">
+                  Copy result
+                </button>
+                <button type="button" id="download-result-btn" class="ap-btn ap-btn-secondary">
+                  Download .txt
+                </button>
+                <p id="copy-status" class="ap-copy-status" aria-live="polite"></p>
+              </div>
             </div>
           </section>
 
@@ -214,7 +237,7 @@
       </main>
 
       <footer class="ap-footer">
-        <span id="version-strip" class="ap-version">v0.3.0</span>
+        <span id="version-strip" class="ap-version">v0.4.0</span>
         <span class="ap-footer-sep" aria-hidden="true">·</span>
         <a
           id="support-link"

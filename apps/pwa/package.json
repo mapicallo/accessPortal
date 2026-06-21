@@ -1,6 +1,6 @@
 {
   "name": "@accessportal/pwa",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -14,5 +14,8 @@
     "pngjs": "^7.0.0",
     "typescript": "~5.7.2",
     "vite": "^6.4.2"
+  },
+  "dependencies": {
+    "pdfjs-dist": "^4.10.38"
   }
 }
