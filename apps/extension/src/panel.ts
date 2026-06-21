@@ -132,10 +132,18 @@ async function boot(): Promise<void> {
   });
 
   document.getElementById('use-page-btn')?.addEventListener('click', () => {
+    if (!window.confirm(t('confirmPage'))) {
+      setStatus(t('statusCancelled'));
+      return;
+    }
     void send('ap:use-page');
   });
 
   document.getElementById('use-selection-btn')?.addEventListener('click', () => {
+    if (!window.confirm(t('confirmSelection'))) {
+      setStatus(t('statusCancelled'));
+      return;
+    }
     void send('ap:use-selection');
   });
 

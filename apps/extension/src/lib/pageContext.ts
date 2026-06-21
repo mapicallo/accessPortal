@@ -50,14 +50,12 @@ async function getActiveTab(): Promise<chrome.tabs.Tab | null> {
   }
 }
 
-function extractReadableTextInPage(maxChars: number, confirmMessage: string): {
+function extractReadableTextInPage(maxChars: number): {
   title: string;
   url: string;
   text: string;
   truncated: boolean;
-} | null {
-  if (!confirm(confirmMessage)) return null;
-
+} {
   const title = document.title?.trim() || '';
   const url = location.href || '';
   const root =
@@ -75,14 +73,12 @@ function extractReadableTextInPage(maxChars: number, confirmMessage: string): {
   return { title, url, text, truncated };
 }
 
-function extractSelectionInPage(maxChars: number, confirmMessage: string): {
+function extractSelectionInPage(maxChars: number): {
   title: string;
   url: string;
   text: string;
   truncated: boolean;
-} | null {
-  if (!confirm(confirmMessage)) return null;
-
+} {
   const title = document.title?.trim() || '';
   const url = location.href || '';
   let text = (window.getSelection()?.toString() ?? '').replace(/\s+/g, ' ').trim();
@@ -109,7 +105,15 @@ function toPayload(
   };
 }
 
-export async function extractActiveTabText(confirmMessage: string): Promise<PageExtractResult> {
+async function focusTab(tabId: number): Promise<void> {
+  const tab = await chrome.tabs.get(tabId);
+  if (tab.windowId !== undefined) {
+    await chrome.windows.update(tab.windowId, { focused: true });
+  }
+  await chrome.tabs.update(tabId, { active: true });
+}
+
+export async function extractActiveTabText(_confirmMessage?: string): Promise<PageExtractResult> {
   const tab = await getActiveTab();
   if (!tab?.id) return { ok: false, error: 'no_tab' };
 
@@ -117,13 +121,12 @@ export async function extractActiveTabText(confirmMessage: string): Promise<Page
   if (isRestrictedUrl(url)) return { ok: false, error: 'restricted' };
 
   try {
+    await focusTab(tab.id);
     const [result] = await chrome.scripting.executeScript({
       target: { tabId: tab.id },
       func: extractReadableTextInPage,
-      args: [MAX_PAGE_CHARS, confirmMessage],
+      args: [MAX_PAGE_CHARS],
     });
-
-    if (result?.result === null) return { ok: false, error: 'cancelled' };
 
     const payload = result?.result;
     if (!payload || typeof payload !== 'object') {
@@ -139,7 +142,7 @@ export async function extractActiveTabText(confirmMessage: string): Promise<Page
   }
 }
 
-export async function extractActiveTabSelection(confirmMessage: string): Promise<PageExtractResult> {
+export async function extractActiveTabSelection(_confirmMessage?: string): Promise<PageExtractResult> {
   const tab = await getActiveTab();
   if (!tab?.id) return { ok: false, error: 'no_tab' };
 
@@ -147,13 +150,12 @@ export async function extractActiveTabSelection(confirmMessage: string): Promise
   if (isRestrictedUrl(url)) return { ok: false, error: 'restricted' };
 
   try {
+    await focusTab(tab.id);
     const [result] = await chrome.scripting.executeScript({
       target: { tabId: tab.id },
       func: extractSelectionInPage,
-      args: [MAX_SELECTION_CHARS, confirmMessage],
+      args: [MAX_SELECTION_CHARS],
     });
-
-    if (result?.result === null) return { ok: false, error: 'cancelled' };
 
     const payload = result?.result;
     if (!payload || typeof payload !== 'object') {

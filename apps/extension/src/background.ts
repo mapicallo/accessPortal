@@ -374,12 +374,9 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
 
 
       if (message?.type === 'ap:use-page') {
-
         const locale = (message.locale === 'es' ? 'es' : 'en') as Locale;
-
         setLocale(locale);
-
-        const result = await extractActiveTabText(t('confirmPage'));
+        const result = await extractActiveTabText();
 
         if (!result.ok) {
 
@@ -395,12 +392,9 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       }
 
       if (message?.type === 'ap:use-selection') {
-
         const locale = (message.locale === 'es' ? 'es' : 'en') as Locale;
-
         setLocale(locale);
-
-        const result = await extractActiveTabSelection(t('confirmSelection'));
+        const result = await extractActiveTabSelection();
 
         if (!result.ok) {
 
