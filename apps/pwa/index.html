@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="AccessPortal — adaptive web accessibility with Chrome's built-in AI. Private, on-device."
+    />
+    <meta name="theme-color" content="#667eea" />
+    <title>AccessPortal</title>
+    <link rel="icon" type="image/png" sizes="48x48" href="./icons/icon48.png" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+  </head>
+  <body>
+    <div id="app" class="ap-shell">
+      <header class="ap-brand-header">
+        <div class="ap-brand-row">
+          <div class="ap-logo">
+            <div class="ap-logo-icon" aria-hidden="true">
+              <img src="./icons/icon48.png" width="44" height="44" alt="" />
+            </div>
+            <div class="ap-logo-text">
+              <h1 class="ap-app-title">AccessPortal</h1>
+              <p class="ap-app-subtitle" id="header-subtitle">By AI4Context</p>
+            </div>
+          </div>
+          <label class="ap-lang-selector" for="locale-select">
+            <span class="ap-lang-label" id="lang-label">Language</span>
+            <select id="locale-select" aria-label="Language">
+              <option value="en">English</option>
+              <option value="es">Español</option>
+            </select>
+          </label>
+        </div>
+      </header>
+
+      <main class="ap-scroll">
+        <section
+          id="model-status"
+          class="ap-status"
+          data-state="checking"
+          aria-live="polite"
+          aria-busy="true"
+        >
+          <div class="ap-spinner" aria-hidden="true"></div>
+
+          <h2 class="ap-status-title" id="status-title">Checking on-device AI…</h2>
+          <p class="ap-status-detail" id="status-detail">
+            Verifying Gemini Nano availability in Chrome.
+          </p>
+
+          <div id="progress-wrap" class="ap-progress-wrap" hidden>
+            <label class="ap-progress-label" id="progress-label" for="download-progress">
+              Download progress
+            </label>
+            <progress id="download-progress" class="ap-progress" max="100" value="0"></progress>
+          </div>
+
+          <ul id="requirements" class="ap-requirements" hidden>
+            <li class="ap-req-heading" id="req-title">Typical requirements</li>
+            <li id="req-chrome">Chrome 148+ (desktop)</li>
+            <li id="req-os">Windows 10/11, macOS 13+, Linux, or Chromebook Plus</li>
+            <li id="req-ram">16 GB RAM (CPU) or GPU with more than 4 GB VRAM</li>
+            <li id="req-storage">~22 GB free space on the Chrome profile volume</li>
+            <li id="req-flags">Dev: enable #prompt-api-for-gemini-nano in chrome://flags</li>
+          </ul>
+
+          <a
+            id="docs-link"
+            class="ap-docs-link"
+            href="https://developer.chrome.com/docs/ai/get-started"
+            target="_blank"
+            rel="noopener noreferrer"
+            hidden
+          >
+            Chrome built-in AI docs
+          </a>
+
+          <button type="button" id="prepare-btn" class="ap-btn ap-btn-primary" hidden>
+            Prepare local AI
+          </button>
+
+          <button type="button" id="retry-btn" class="ap-btn ap-btn-ghost" hidden>
+            Check again
+          </button>
+        </section>
+
+        <section id="cognitive-portal" class="ap-portal ap-portal-cognitive" hidden>
+          <div id="ap-ready-strip" class="ap-ready-strip">
+            <span class="ap-ready-strip-icon" aria-hidden="true">✓</span>
+            <span id="ready-strip-label" class="ap-ready-strip-label">Local AI is ready</span>
+          </div>
+
+          <p class="ap-portal-intro" id="cognitive-intro">
+            Paste text you want to understand more easily. Processing stays on this device.
+          </p>
+
+          <div class="ap-disclaimer" role="note" id="ai-disclaimer">
+            AI may make mistakes. Always check the original text for important decisions.
+          </div>
+
+          <label class="ap-field-label" for="source-text" id="source-label">Your text</label>
+          <textarea
+            id="source-text"
+            class="ap-textarea ap-cognitive-input"
+            rows="10"
+            spellcheck="true"
+            aria-describedby="char-hint ai-disclaimer"
+          ></textarea>
+          <p class="ap-char-hint" id="char-hint" aria-live="polite"></p>
+
+          <div class="ap-action-row">
+            <button type="button" id="summarize-btn" class="ap-btn ap-btn-primary">
+              Summarize key points
+            </button>
+            <button type="button" id="easy-read-btn" class="ap-btn ap-btn-secondary">
+              Simplify selection
+            </button>
+            <button type="button" id="stop-btn" class="ap-btn ap-btn-ghost" hidden disabled>
+              Stop
+            </button>
+          </div>
+
+          <div id="result-region" class="ap-result-region" hidden>
+            <h2 class="ap-result-heading" id="result-heading">Result</h2>
+            <p class="ap-writing" id="writing-indicator" hidden aria-live="polite">Writing…</p>
+            <article
+              id="result-output"
+              class="ap-result-output ap-cognitive-output"
+              aria-live="polite"
+              aria-atomic="true"
+            ></article>
+          </div>
+        </section>
+      </main>
+
+      <footer class="ap-footer">
+        <span id="version-strip" class="ap-version">v0.2.0</span>
+        <span class="ap-footer-sep" aria-hidden="true">·</span>
+        <a
+          id="support-link"
+          class="ap-footer-link"
+          href="https://github.com/mapicallo/accessPortal/issues"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Support
+        </a>
+      </footer>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

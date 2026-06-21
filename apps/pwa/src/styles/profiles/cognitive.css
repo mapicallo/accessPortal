@@ -1,0 +1,45 @@
+/* Cognitive profile — dyslexia-friendly typography */
+
+@font-face {
+  font-family: 'OpenDyslexic';
+  src: url('/fonts/opendyslexic/OpenDyslexic-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+.ap-portal-cognitive {
+  --ap-cog-font: 'OpenDyslexic', 'Segoe UI', 'Comic Sans MS', sans-serif;
+}
+
+.ap-cognitive-input,
+.ap-cognitive-output {
+  font-family: var(--ap-cog-font);
+  letter-spacing: 0.03em;
+  line-height: 1.75;
+  word-spacing: 0.08em;
+}
+
+.ap-cognitive-input {
+  font-size: 1.05rem;
+}
+
+.ap-cognitive-output {
+  font-size: 1.08rem;
+}
+
+.ap-portal-cognitive .ap-action-row .ap-btn {
+  min-width: 11rem;
+}
+
+.ap-portal-cognitive.ap-low-distraction .ap-ready-strip,
+.ap-portal-cognitive.ap-low-distraction .ap-portal-intro {
+  /* keep minimal chrome once user is working */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ap-spinner {
+    animation: none;
+    border-top-color: var(--ap-accent);
+  }
+}
