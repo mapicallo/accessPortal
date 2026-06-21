@@ -16,6 +16,10 @@ export type MessageKey =
   | 'stateUnavailableDetail'
   | 'stateNoApi'
   | 'stateNoApiDetail'
+  | 'stateCheckTimeout'
+  | 'stateCheckTimeoutDetail'
+  | 'statePrepareTimeout'
+  | 'statePrepareTimeoutDetail'
   | 'progressLabel'
   | 'prepareAi'
   | 'retry'
@@ -138,6 +142,12 @@ const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     stateNoApi: 'Built-in AI API not found',
     stateNoApiDetail:
       'Use Chrome 148+ on desktop, or enable Prompt API flags for development.',
+    stateCheckTimeout: 'Chrome did not respond in time',
+    stateCheckTimeoutDetail:
+      'Gemini Nano check timed out. Enable chrome://flags/#prompt-api-for-gemini-nano (and BypassPerfRequirement in dev), then click Prepare local AI or Check again.',
+    statePrepareTimeout: 'Model preparation timed out',
+    statePrepareTimeoutDetail:
+      'Download took too long. Keep Chrome open, check free disk space (~22 GB), then click Check again.',
     progressLabel: 'Download progress',
     prepareAi: 'Prepare local AI',
     retry: 'Check again',
@@ -264,6 +274,12 @@ const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     stateNoApi: 'API de IA integrada no encontrada',
     stateNoApiDetail:
       'Usa Chrome 148+ en escritorio, o activa los flags de Prompt API en desarrollo.',
+    stateCheckTimeout: 'Chrome no respondió a tiempo',
+    stateCheckTimeoutDetail:
+      'La comprobación de Gemini Nano tardó demasiado. Activa chrome://flags/#prompt-api-for-gemini-nano (y BypassPerfRequirement en dev) y pulsa Preparar IA local o Comprobar de nuevo.',
+    statePrepareTimeout: 'La preparación del modelo tardó demasiado',
+    statePrepareTimeoutDetail:
+      'La descarga tardó demasiado. Mantén Chrome abierto, comprueba espacio libre (~22 GB) y pulsa Comprobar de nuevo.',
     progressLabel: 'Progreso de descarga',
     prepareAi: 'Preparar IA local',
     retry: 'Comprobar de nuevo',

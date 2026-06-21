@@ -7,6 +7,7 @@ import {
   queryLanguageModelAvailability,
   type AvailabilityKind,
 } from './languageModel.js';
+import { withTimeoutKind } from './aiTimeout.js';
 
 type SummarizerGlobal = {
   availability?: (options?: typeof SUMMARIZER_OPTIONS) => Promise<string>;
@@ -42,18 +43,27 @@ export type AiReadiness = {
   summarizer: AvailabilityKind;
   /** worst-case status for download UI */
   combined: AvailabilityKind;
+  /** true if Chrome availability() did not respond in time */
+  timedOut: boolean;
 };
 
 export async function checkAiReadiness(): Promise<AiReadiness> {
-  const languageModel = hasLanguageModelApi()
-    ? await queryLanguageModelAvailability()
-    : 'unavailable';
-  const summarizer = hasSummarizerApi() ? await querySummarizerAvailability() : 'unavailable';
+  const [lmResult, sumResult] = await Promise.all([
+    hasLanguageModelApi()
+      ? withTimeoutKind(queryLanguageModelAvailability())
+      : Promise.resolve({ kind: 'unavailable' as AvailabilityKind, timedOut: false }),
+    hasSummarizerApi()
+      ? withTimeoutKind(querySummarizerAvailability())
+      : Promise.resolve({ kind: 'unavailable' as AvailabilityKind, timedOut: false }),
+  ]);
 
+  const timedOut = lmResult.timedOut || sumResult.timedOut;
+  const languageModel = lmResult.kind;
+  const summarizer = sumResult.kind;
   const hasAnyApi = hasLanguageModelApi() || hasSummarizerApi();
   const combined = pickCombinedStatus(languageModel, summarizer);
 
-  return { hasAnyApi, languageModel, summarizer, combined };
+  return { hasAnyApi, languageModel, summarizer, combined, timedOut };
 }
 
 function pickCombinedStatus(a: AvailabilityKind, b: AvailabilityKind): AvailabilityKind {

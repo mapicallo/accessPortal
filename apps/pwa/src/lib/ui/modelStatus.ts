@@ -105,6 +105,17 @@ async function runPrepareFlow(): Promise<void> {
   prepareBtn()?.setAttribute('disabled', 'true');
   retryBtn()?.setAttribute('disabled', 'true');
 
+  const prepareTimeout = window.setTimeout(() => {
+    if (!portalReady && running) {
+      destroyWarmSession();
+      setUiState('unavailable');
+      setStatus('statePrepareTimeout', 'statePrepareTimeoutDetail');
+      running = false;
+      prepareBtn()?.removeAttribute('disabled');
+      retryBtn()?.removeAttribute('disabled');
+    }
+  }, 120_000);
+
   try {
     setUiState('downloading');
     setStatus('stateDownloading', 'stateDownloadingDetail');
@@ -122,6 +133,7 @@ async function runPrepareFlow(): Promise<void> {
     setUiState('unavailable');
     setStatus('stateUnavailable', 'stateUnavailableDetail');
   } finally {
+    window.clearTimeout(prepareTimeout);
     running = false;
     prepareBtn()?.removeAttribute('disabled');
     retryBtn()?.removeAttribute('disabled');
@@ -146,7 +158,13 @@ async function runCheckFlow(): Promise<void> {
     }
 
     lastReadiness = await checkAiReadiness();
-    const { combined } = lastReadiness;
+    const { combined, timedOut } = lastReadiness;
+
+    if (timedOut && hasBuiltInAiApi()) {
+      setUiState('downloadable');
+      setStatus('stateCheckTimeout', 'stateCheckTimeoutDetail');
+      return;
+    }
 
     if (combined === 'unavailable') {
       setUiState('unavailable');
@@ -204,7 +222,9 @@ export function initModelStatus(): ModelStatusController {
         unavailable: ['stateUnavailable', 'stateUnavailableDetail'],
         'no-api': ['stateNoApi', 'stateNoApiDetail'],
       };
-      if (state && map[state]) {
+      if (state === 'downloadable' && lastReadiness?.timedOut) {
+        setStatus('stateCheckTimeout', 'stateCheckTimeoutDetail');
+      } else if (state && map[state]) {
         const [title, detail] = map[state]!;
         setStatus(title, detail);
       }
