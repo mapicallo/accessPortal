@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Privacy Policy — AccessPortal</title>
+    <meta
+      name="description"
+      content="Privacy policy for AccessPortal (PWA and Chrome extension with on-device built-in AI)."
+    />
+    <meta name="color-scheme" content="light dark" />
+    <style>
+      :root {
+        --bg: #f8fafc;
+        --text: #0f172a;
+        --muted: #64748b;
+        --accent: #667eea;
+        --border: #e2e8f0;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0f172a;
+          --text: #f1f5f9;
+          --muted: #94a3b8;
+          --border: #334155;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        font-size: 16px;
+        line-height: 1.55;
+        color: var(--text);
+        background: var(--bg);
+      }
+      .wrap {
+        max-width: 44rem;
+        margin: 0 auto;
+        padding: 2rem 1.25rem 4rem;
+      }
+      header {
+        margin-bottom: 2rem;
+        padding-bottom: 1.25rem;
+        border-bottom: 1px solid var(--border);
+      }
+      .header-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      h1 {
+        margin: 0 0 0.35rem;
+        font-size: 1.65rem;
+        font-weight: 700;
+      }
+      .meta {
+        margin: 0;
+        font-size: 0.9rem;
+        color: var(--muted);
+      }
+      .lang-picker {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        font-size: 0.8rem;
+        color: var(--muted);
+      }
+      .lang-picker select {
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 6px 10px;
+        font-size: 0.9rem;
+        background: var(--bg);
+        color: var(--text);
+      }
+      h2 {
+        margin: 2rem 0 0.65rem;
+        font-size: 1.15rem;
+        font-weight: 650;
+        color: var(--accent);
+      }
+      p,
+      li {
+        margin: 0.65rem 0;
+      }
+      ul {
+        margin: 0.5rem 0 0.5rem 1.1rem;
+        padding: 0;
+      }
+      a {
+        color: var(--accent);
+        text-decoration: underline;
+        text-underline-offset: 2px;
+      }
+      code {
+        font-size: 0.92em;
+      }
+      .note {
+        margin-top: 2.5rem;
+        padding: 0.9rem 1rem;
+        font-size: 0.88rem;
+        color: var(--muted);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+      }
+      html:lang(en) #content-es,
+      html:lang(en) #page-title-es,
+      html:lang(en) #meta-es,
+      html:lang(en) #lang-label-es {
+        display: none;
+      }
+      html:lang(es) #content-en,
+      html:lang(es) #page-title-en,
+      html:lang(es) #meta-en,
+      html:lang(es) #lang-label-en {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <div class="header-row">
+          <div>
+            <h1 id="page-title-en">Privacy Policy</h1>
+            <h1 id="page-title-es">Política de privacidad</h1>
+            <p class="meta" id="meta-en">
+              <strong>AccessPortal</strong> · PWA &amp; Chrome extension · Effective date: 2 June 2026
+            </p>
+            <p class="meta" id="meta-es">
+              <strong>AccessPortal</strong> · PWA y extensión Chrome · Fecha de vigencia: 2 de junio de 2026
+            </p>
+          </div>
+          <label class="lang-picker">
+            <span id="lang-label-en">Language</span>
+            <span id="lang-label-es">Idioma</span>
+            <select id="lang-select" aria-labelledby="lang-label-en">
+              <option value="en">English</option>
+              <option value="es">Español</option>
+            </select>
+          </label>
+        </div>
+      </header>
+
+      <div id="content-en" class="lang-panel">
+        <p>
+          This policy describes how <strong>AccessPortal</strong> (“the Product”) handles information.
+          AccessPortal is a progressive web app (PWA) and optional Chrome extension that adapts content
+          <strong>you choose</strong> using Chrome’s on-device language model (Gemini Nano via the Prompt API).
+          Your text and images are <strong>not</strong> sent to servers operated by the developer for AI processing.
+        </p>
+
+        <h2>Single purpose (extension)</h2>
+        <p>
+          The Chrome extension has one purpose: send visible page text or text you selected to an open
+          AccessPortal PWA tab for local accessibility adaptations, after you confirm on the page.
+        </p>
+
+        <h2>Who we are</h2>
+        <p>
+          AccessPortal is part of the <strong>AI4Context</strong> extension family. See
+          <a href="https://www.ai4context.com/" rel="noopener noreferrer" target="_blank">ai4context.com</a>.
+        </p>
+
+        <h2>What the Product does</h2>
+        <ul>
+          <li>
+            Runs summaries, easy-read simplifications, image descriptions, and motor-profile note structuring
+            through Chrome’s built-in on-device AI in the PWA.
+          </li>
+          <li>
+            Stores accessibility preferences and adaptation history in <strong>IndexedDB</strong> on this device.
+          </li>
+          <li>
+            When you use the extension, reads <strong>visible text</strong> or your <strong>selection</strong> from
+            the active tab only after you confirm a one-time script injection on that page.
+          </li>
+          <li>
+            Lets you attach local documents (.txt, .md, .pdf) and images; content is processed locally in the PWA.
+          </li>
+          <li>
+            Motor-profile dictation uses the browser’s <strong>Web Speech API</strong>; speech recognition may be
+            handled by your browser or operating system (not necessarily offline).
+          </li>
+        </ul>
+
+        <h2>Data we do not collect</h2>
+        <p>
+          No account is required. We do <strong>not</strong> operate a backend that receives your pasted text,
+          attached files, images, dictation, or adaptation results. Content is not uploaded to AI4Context servers
+          as part of the core feature.
+        </p>
+
+        <h2>Local storage</h2>
+        <p>The PWA uses <strong>IndexedDB</strong> and <code>localStorage</code> for:</p>
+        <ul>
+          <li>UI language and accessibility preferences,</li>
+          <li>adaptation history on this device (local only, not synced to AI4Context servers).</li>
+        </ul>
+        <p>
+          The extension uses <code>chrome.storage.sync</code> for optional settings such as the PWA base URL
+          (<code>ap_pwa_base_url</code>).
+        </p>
+        <p>On-device model files are managed by Google Chrome, not by this Product’s server.</p>
+
+        <h2>Permissions (extension)</h2>
+        <ul>
+          <li><strong>Active tab + scripting:</strong> only when you send page text or selection to the PWA.</li>
+          <li><strong>Storage:</strong> extension settings.</li>
+          <li><strong>Tabs:</strong> open or focus the AccessPortal PWA tab.</li>
+        </ul>
+
+        <h2>Third parties</h2>
+        <p>
+          Google Chrome downloads and runs Gemini Nano on your device. See Google’s documentation and privacy
+          notices for built-in AI. Dictation may use speech services provided by your browser or OS. Websites
+          you read may have their own policies.
+        </p>
+
+        <h2>Contact</h2>
+        <p>
+          Questions:
+          <a href="https://github.com/mapicallo/accessPortal" rel="noopener noreferrer" target="_blank"
+            >github.com/mapicallo/accessPortal</a
+          >
+          or
+          <a href="https://www.ai4context.com/" rel="noopener noreferrer" target="_blank">ai4context.com</a>.
+        </p>
+
+        <p class="note">For Chrome Web Store, GitHub Pages, and the in-app privacy link.</p>
+      </div>
+
+      <div id="content-es" class="lang-panel">
+        <p>
+          Esta política describe cómo <strong>AccessPortal</strong> («el Producto») trata la información.
+          AccessPortal es una aplicación web progresiva (PWA) y una extensión opcional de Chrome que adapta contenido
+          <strong>que tú eliges</strong> con el modelo de lenguaje integrado en tu dispositivo (Gemini Nano mediante
+          la Prompt API de Chrome). Tu texto e imágenes <strong>no</strong> se envían a servidores del desarrollador
+          para procesarlos con IA.
+        </p>
+
+        <h2>Propósito único (extensión)</h2>
+        <p>
+          La extensión Chrome tiene un solo propósito: enviar texto visible de la página o texto que seleccionaste
+          a una pestaña abierta de AccessPortal para adaptaciones de accesibilidad en local, tras confirmar en la página.
+        </p>
+
+        <h2>Quiénes somos</h2>
+        <p>
+          AccessPortal forma parte de la familia de extensiones <strong>AI4Context</strong>. Consulta
+          <a href="https://www.ai4context.com/" rel="noopener noreferrer" target="_blank">ai4context.com</a>.
+        </p>
+
+        <h2>Qué hace el Producto</h2>
+        <ul>
+          <li>
+            Ejecuta resúmenes, simplificaciones de lectura fácil, descripciones de imágenes y estructuración de notas
+            del perfil motor con la IA integrada en Chrome en la PWA.
+          </li>
+          <li>
+            Guarda preferencias de accesibilidad e historial de adaptaciones en <strong>IndexedDB</strong> en este dispositivo.
+          </li>
+          <li>
+            Cuando usas la extensión, lee el <strong>texto visible</strong> o tu <strong>selección</strong> de la pestaña
+            activa solo después de que confirmes un script puntual en esa página.
+          </li>
+          <li>
+            Permite adjuntar documentos locales (.txt, .md, .pdf) e imágenes; el contenido se procesa en local en la PWA.
+          </li>
+          <li>
+            El dictado del perfil motor usa la <strong>Web Speech API</strong> del navegador; el reconocimiento de voz puede
+            gestionarlo tu navegador o sistema operativo (no necesariamente offline).
+          </li>
+        </ul>
+
+        <h2>Datos que no recopilamos</h2>
+        <p>
+          No se requiere cuenta. <strong>No</strong> operamos un backend que reciba tu texto pegado, archivos adjuntos,
+          imágenes, dictado o resultados de adaptación. El contenido no se sube a servidores de AI4Context como parte
+          de la función principal.
+        </p>
+
+        <h2>Almacenamiento local</h2>
+        <p>La PWA usa <strong>IndexedDB</strong> y <code>localStorage</code> para:</p>
+        <ul>
+          <li>idioma de la interfaz y preferencias de accesibilidad,</li>
+          <li>historial de adaptaciones en este dispositivo (solo local, sin sincronizar con servidores de AI4Context).</li>
+        </ul>
+        <p>
+          La extensión usa <code>chrome.storage.sync</code> para ajustes opcionales como la URL base de la PWA
+          (<code>ap_pwa_base_url</code>).
+        </p>
+        <p>Los archivos del modelo en el dispositivo los gestiona Google Chrome, no un servidor de este Producto.</p>
+
+        <h2>Permisos (extensión)</h2>
+        <ul>
+          <li><strong>Pestaña activa + scripting:</strong> solo cuando envías texto de página o selección a la PWA.</li>
+          <li><strong>Storage:</strong> ajustes de la extensión.</li>
+          <li><strong>Tabs:</strong> abrir o enfocar la pestaña de AccessPortal.</li>
+        </ul>
+
+        <h2>Terceros</h2>
+        <p>
+          Google Chrome descarga y ejecuta Gemini Nano en tu dispositivo. Consulta la documentación y avisos de privacidad
+          de Google sobre IA integrada. El dictado puede usar servicios de voz del navegador o SO. Los sitios web que lees
+          tienen sus propias políticas.
+        </p>
+
+        <h2>Contacto</h2>
+        <p>
+          Preguntas:
+          <a href="https://github.com/mapicallo/accessPortal" rel="noopener noreferrer" target="_blank"
+            >github.com/mapicallo/accessPortal</a
+          >
+          o
+          <a href="https://www.ai4context.com/" rel="noopener noreferrer" target="_blank">ai4context.com</a>.
+        </p>
+
+        <p class="note">Para Chrome Web Store, GitHub Pages y el enlace de privacidad en la app.</p>
+      </div>
+    </div>
+
+    <script src="privacy.js"></script>
+  </body>
+</html>

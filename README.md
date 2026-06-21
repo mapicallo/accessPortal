@@ -8,9 +8,11 @@ Parte del ecosistema [AI4Context](https://www.ai4context.com).
 
 ## Estado
 
-**v0.7.0** — Tres perfiles activos (cognitivo, visual, motor) + extensión Chrome compañera.
+**v1.0.0** — Extensión Chrome lista para CWS: `npm run pack`, assets de tienda, ficha y checklist.
 
-Ver [docs/IMPLEMENTATION_PLAN.md](docs/IMPLEMENTATION_PLAN.md) para el roadmap completo.
+Ver [docs/CHROME_WEB_STORE.md](docs/CHROME_WEB_STORE.md) y [docs/FICHA_PRODUCTO.md](docs/FICHA_PRODUCTO.md).
+
+**v0.8.0** — Matriz de capacidades/límites (panel determinista), privacidad bilingüe ES/EN, i18n completo en pie de página.
 
 ## Requisitos
 
@@ -45,7 +47,15 @@ npm run build
 ```
 
 Carga `apps/extension/dist/` en `chrome://extensions` (modo desarrollador).  
-Empaqueta con `npm run pack` → `AccessPortal-extension-v0.6.0.zip`.
+Empaqueta con `npm run pack` → `AccessPortal-extension-v1.0.0.zip`.
+
+Genera capturas y mosaicos CWS:
+
+```powershell
+npm run store-assets
+```
+
+Assets en `apps/extension/store-assets/`. Ver [docs/CHROME_WEB_STORE.md](docs/CHROME_WEB_STORE.md).
 
 Flujo: en un artículo web → icono AccessPortal → **Usar esta página** → confirma en la página → se abre la PWA con el texto cargado.
 

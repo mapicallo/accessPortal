@@ -735,3 +735,127 @@ html[data-font-size='xlarge'] {
   font-size: calc(1rem * var(--ap-font-scale));
 }
 
+.ap-capabilities-chip {
+  border: 1px solid var(--ap-accent);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ap-accent-dark);
+  background: var(--ap-accent-soft);
+  cursor: pointer;
+}
+
+.ap-capabilities-chip:hover {
+  background: #e8ebff;
+}
+
+.ap-capabilities-chip:focus-visible {
+  outline: none;
+  box-shadow: var(--ap-focus);
+}
+
+.ap-footer-link-btn {
+  border: 0;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+  font: inherit;
+}
+
+.ap-capabilities-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 25;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 24px 16px;
+  overflow-y: auto;
+  background: rgba(33, 37, 41, 0.45);
+}
+
+.ap-capabilities-panel-inner {
+  width: min(100%, 36rem);
+  max-height: min(90vh, 720px);
+  background: #fff;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  border-radius: var(--ap-radius);
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+}
+
+.ap-capabilities-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-shrink: 0;
+}
+
+.ap-capabilities-heading {
+  margin: 0;
+  font-size: calc(1.05rem * var(--ap-font-scale));
+}
+
+.ap-capabilities-scroll {
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.ap-capabilities-intro,
+.ap-capabilities-note {
+  margin: 0 0 12px;
+  color: var(--ap-muted);
+  line-height: 1.55;
+  font-size: calc(0.92rem * var(--ap-font-scale));
+}
+
+.ap-capabilities-status {
+  margin: 0 0 16px;
+  padding: 10px 12px;
+  border-radius: var(--ap-radius);
+  background: var(--ap-accent-soft);
+  color: var(--ap-accent-dark);
+  font-size: calc(0.88rem * var(--ap-font-scale));
+  font-weight: 600;
+}
+
+.ap-capabilities-block {
+  margin-bottom: 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--ap-border);
+}
+
+.ap-capabilities-block:last-of-type {
+  border-bottom: 0;
+}
+
+.ap-capabilities-block-title {
+  margin: 0 0 8px;
+  font-size: calc(0.98rem * var(--ap-font-scale));
+}
+
+.ap-capabilities-list-heading {
+  margin: 10px 0 6px;
+  font-size: calc(0.78rem * var(--ap-font-scale));
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ap-muted);
+}
+
+.ap-capabilities-list {
+  margin: 0 0 8px;
+  padding-left: 1.2rem;
+  font-size: calc(0.9rem * var(--ap-font-scale));
+  line-height: 1.5;
+}
+
+.ap-capabilities-list--limits {
+  color: var(--ap-muted);
+}
+

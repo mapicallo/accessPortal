@@ -111,7 +111,13 @@ export type MessageKey =
   | 'motorNoteBodyLabel'
   | 'motorClearBtn'
   | 'motorHistoryLoaded'
-  | 'historyModeMotorNote';
+  | 'historyModeMotorNote'
+  | 'capabilitiesBtn'
+  | 'capabilitiesTitle'
+  | 'capabilitiesClose'
+  | 'capabilitiesCanDo'
+  | 'capabilitiesCannotDo'
+  | 'footerPrivacy';
 
 const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
   en: {
@@ -233,6 +239,12 @@ const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     motorClearBtn: 'Clear form',
     motorHistoryLoaded: 'Note loaded from history.',
     historyModeMotorNote: 'Accessibility note',
+    capabilitiesBtn: 'What can AccessPortal do?',
+    capabilitiesTitle: 'Capabilities & limits',
+    capabilitiesClose: 'Close',
+    capabilitiesCanDo: 'Can do',
+    capabilitiesCannotDo: 'Cannot do',
+    footerPrivacy: 'Privacy',
   },
   es: {
     appSubtitle: 'By AI4Context',
@@ -353,6 +365,12 @@ const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     motorClearBtn: 'Limpiar formulario',
     motorHistoryLoaded: 'Nota cargada del historial.',
     historyModeMotorNote: 'Nota de accesibilidad',
+    capabilitiesBtn: '¿Qué puede hacer AccessPortal?',
+    capabilitiesTitle: 'Capacidades y límites',
+    capabilitiesClose: 'Cerrar',
+    capabilitiesCanDo: 'Puede',
+    capabilitiesCannotDo: 'No puede',
+    footerPrivacy: 'Privacidad',
   },
 };
 
@@ -417,6 +435,8 @@ export function applyStaticTranslations(root: ParentNode = document): void {
     ['result-heading', 'resultHeading'],
     ['writing-indicator', 'writing'],
     ['support-link', 'footerSupport'],
+    ['privacy-link', 'footerPrivacy'],
+    ['capabilities-chip', 'capabilitiesBtn'],
     ['profile-label', 'profileLabel'],
     ['profile-cognitive-label', 'profileCognitive'],
     ['profile-visual-label', 'profileVisual'],

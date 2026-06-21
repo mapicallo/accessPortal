@@ -1,5 +1,6 @@
 import './popup.css';
 import { applyPopupLabels, getLocale, pageErrorMessage, setLocale, t } from './lib/i18n.js';
+import { openPrivacyPolicy } from './lib/privacyUrl.js';
 
 const statusEl = document.getElementById('popup-status');
 const localeSelect = document.getElementById('locale-select') as HTMLSelectElement | null;
@@ -71,6 +72,10 @@ async function boot(): Promise<void> {
 
   document.getElementById('use-selection-btn')?.addEventListener('click', () => {
     void send('ap:use-selection');
+  });
+
+  document.getElementById('privacy-link')?.addEventListener('click', () => {
+    openPrivacyPolicy(getLocale());
   });
 }
 

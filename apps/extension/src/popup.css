@@ -100,3 +100,37 @@ body {
   color: var(--apx-muted);
   line-height: 1.4;
 }
+
+.apx-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--apx-border);
+  font-size: 0.75rem;
+}
+
+.apx-link-btn {
+  border: 0;
+  padding: 0;
+  background: none;
+  color: var(--apx-accent-dark);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.apx-link-btn:hover {
+  color: var(--apx-accent);
+}
+
+.apx-links-sep {
+  color: var(--apx-muted);
+}
+
+.apx-version {
+  color: var(--apx-muted);
+}

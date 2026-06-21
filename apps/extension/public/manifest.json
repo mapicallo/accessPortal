@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "AccessPortal — make web content more accessible in Chrome",
-  "version": "0.6.0",
-  "description": "Send page text or selections to the AccessPortal PWA for local AI accessibility tools.",
+  "version": "1.0.0",
+  "description": "Adaptive web accessibility with Chrome's built-in AI. Private, on-device.",
   "action": {
     "default_title": "AccessPortal",
     "default_popup": "popup.html",

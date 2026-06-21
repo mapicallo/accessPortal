@@ -35,6 +35,8 @@ import {
 } from './lib/profiles/preferences.js';
 import { initProfileSelector, refreshProfileLabels, selectProfile } from './lib/profiles/selector.js';
 import { initHistoryPanel, refreshHistoryLabels } from './lib/ui/historyPanel.js';
+import { initCapabilitiesPanel, refreshCapabilitiesLabels } from './lib/ui/capabilitiesPanel.js';
+import { openPrivacyPolicy } from './lib/privacyUrl.js';
 import { initModelStatus } from './lib/ui/modelStatus.js';
 import type { FontSizeId } from './lib/profiles/types.js';
 import { initExtensionImport, tryFetchImportViaExtension } from './lib/bridge/extensionImport.js';
@@ -67,6 +69,7 @@ function refreshAllLabels(): void {
   applyStaticTranslations(document);
   refreshProfileLabels();
   refreshHistoryLabels();
+  refreshCapabilitiesLabels();
   refreshCognitiveLabels();
   refreshVisualLabels();
   refreshMotorLabels();
@@ -83,6 +86,7 @@ async function boot(): Promise<void> {
 
   initProfileSelector();
   initHistoryPanel(openHistoryEntry);
+  initCapabilitiesPanel();
   const modelStatus = initModelStatus();
   initCognitivePortal();
   initVisualPortal();
@@ -116,6 +120,10 @@ async function boot(): Promise<void> {
       modelStatus.refreshTranslations();
     });
   }
+
+  document.getElementById('privacy-link')?.addEventListener('click', () => {
+    openPrivacyPolicy(getLocale());
+  });
 
   document.documentElement.lang = getLocale();
   refreshAllLabels();

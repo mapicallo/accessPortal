@@ -372,10 +372,37 @@
             </footer>
           </div>
         </aside>
+
+        <aside
+          id="capabilities-panel"
+          class="ap-capabilities-panel"
+          hidden
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="capabilities-title"
+        >
+          <div class="ap-capabilities-panel-inner">
+            <header class="ap-capabilities-header">
+              <h2 id="capabilities-title" class="ap-capabilities-heading">Capabilities & limits</h2>
+              <button type="button" id="capabilities-close-btn" class="ap-btn ap-btn-ghost">
+                Close
+              </button>
+            </header>
+            <div id="capabilities-content" class="ap-capabilities-scroll"></div>
+          </div>
+        </aside>
       </main>
 
       <footer class="ap-footer">
-        <span id="version-strip" class="ap-version">v0.7.0</span>
+        <span id="version-strip" class="ap-version">v0.8.0</span>
+        <span class="ap-footer-sep" aria-hidden="true">·</span>
+        <button type="button" id="capabilities-chip" class="ap-capabilities-chip">
+          What can AccessPortal do?
+        </button>
+        <span class="ap-footer-sep" aria-hidden="true">·</span>
+        <button type="button" id="privacy-link" class="ap-footer-link ap-footer-link-btn">
+          Privacy
+        </button>
         <span class="ap-footer-sep" aria-hidden="true">·</span>
         <a
           id="support-link"

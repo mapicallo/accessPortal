@@ -17,7 +17,8 @@ export type MessageKey =
   | 'errorGeneric'
   | 'confirmPage'
   | 'confirmSelection'
-  | 'footerHint';
+  | 'footerHint'
+  | 'footerPrivacy';
 
 const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
   en: {
@@ -40,6 +41,7 @@ const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     confirmSelection:
       'AccessPortal will read the text you highlighted on this page. Continue?',
     footerHint: 'Text is processed locally in the AccessPortal PWA.',
+    footerPrivacy: 'Privacy',
   },
   es: {
     popupTitle: 'Enviar contenido a AccessPortal',
@@ -61,6 +63,7 @@ const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     confirmSelection:
       'AccessPortal leerá el texto que resaltaste en esta página. ¿Continuar?',
     footerHint: 'El texto se procesa en local en la PWA AccessPortal.',
+    footerPrivacy: 'Privacidad',
   },
 };
 
@@ -97,6 +100,7 @@ export function applyPopupLabels(): void {
     ['use-page-btn', 'usePage'],
     ['use-selection-btn', 'useSelection'],
     ['popup-footer', 'footerHint'],
+    ['privacy-link', 'footerPrivacy'],
   ];
   for (const [id, key] of map) {
     const el = document.getElementById(id);
