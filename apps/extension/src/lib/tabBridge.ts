@@ -3,7 +3,7 @@ import {
   IMPORT_STORAGE_KEY,
   type ExtensionImportPayload,
 } from './importPayload.js';
-import { isAllowedPwaUrl, normalizePwaUrl, resolvePwaUrl } from './pwaUrl.js';
+import { checkPwaHttpReachable, isAllowedPwaUrl, normalizePwaUrl, resolvePwaUrl } from './pwaUrl.js';
 
 function sessionLike(): chrome.storage.StorageArea {
   return chrome.storage.session ?? chrome.storage.local;
@@ -12,7 +12,7 @@ function sessionLike(): chrome.storage.StorageArea {
 const PWA_TAB_SESSION_KEY = 'ap_pwa_tab_id';
 
 export type OpenPwaResult =
-  | { ok: true; tab: chrome.tabs.Tab }
+  | { ok: true; tab: chrome.tabs.Tab; createdNewTab: boolean }
   | { ok: false; error: 'pwa_unreachable' | 'pwa_tab_failed'; pwaUrl: string };
 
 async function waitForTabSettled(tabId: number, attempts = 16): Promise<chrome.tabs.Tab | null> {
@@ -50,7 +50,26 @@ export async function verifyPwaTabReachable(tabId: number, pwaUrl: string): Prom
   }
 }
 
-export async function openOrFocusPwaTab(url?: string): Promise<chrome.tabs.Tab | undefined> {
+export async function checkPwaAvailable(pwaUrl?: string): Promise<{ reachable: boolean; pwaUrl: string }> {
+  const url = normalizePwaUrl(pwaUrl ?? (await resolvePwaUrl()));
+  const origin = new URL(url).origin;
+  try {
+    const tabs = await chrome.tabs.query({ url: `${origin}/*` });
+    for (const tab of tabs) {
+      if (tab.id != null && (await verifyPwaTabReachable(tab.id, url))) {
+        return { reachable: true, pwaUrl: url };
+      }
+    }
+  } catch {
+    /* ignore */
+  }
+  const reachable = await checkPwaHttpReachable(url);
+  return { reachable, pwaUrl: url };
+}
+
+export async function openOrFocusPwaTab(
+  url?: string,
+): Promise<{ tab?: chrome.tabs.Tab; createdNewTab: boolean }> {
   const pwaUrl = normalizePwaUrl(url ?? (await resolvePwaUrl()));
 
   try {
@@ -65,7 +84,7 @@ export async function openOrFocusPwaTab(url?: string): Promise<chrome.tabs.Tab |
             if (tab.windowId !== undefined) {
               await chrome.windows.update(tab.windowId, { focused: true });
             }
-            return tab;
+            return { tab, createdNewTab: false };
           }
           await sessionLike().remove(PWA_TAB_SESSION_KEY);
         }
@@ -81,12 +100,12 @@ export async function openOrFocusPwaTab(url?: string): Promise<chrome.tabs.Tab |
   if (tab.id != null) {
     await sessionLike().set({ [PWA_TAB_SESSION_KEY]: tab.id });
   }
-  return tab;
+  return { tab, createdNewTab: true };
 }
 
 export async function openOrVerifyPwaTab(url?: string): Promise<OpenPwaResult> {
   const pwaUrl = normalizePwaUrl(url ?? (await resolvePwaUrl()));
-  const tab = await openOrFocusPwaTab(pwaUrl);
+  const { tab, createdNewTab } = await openOrFocusPwaTab(pwaUrl);
   if (!tab?.id) {
     return { ok: false, error: 'pwa_tab_failed', pwaUrl };
   }
@@ -97,7 +116,7 @@ export async function openOrVerifyPwaTab(url?: string): Promise<OpenPwaResult> {
     return { ok: false, error: 'pwa_unreachable', pwaUrl };
   }
 
-  return { ok: true, tab };
+  return { ok: true, tab, createdNewTab };
 }
 
 async function waitForTabComplete(tabId: number, attempts = 12): Promise<boolean> {
@@ -129,7 +148,9 @@ export async function injectImportIntoPwaTab(
   });
 }
 
-export async function deliverImportToPwa(payload: ExtensionImportPayload): Promise<void> {
+export async function deliverImportToPwa(
+  payload: ExtensionImportPayload,
+): Promise<{ createdNewTab: boolean }> {
   await chrome.storage.local.set({ [IMPORT_STORAGE_KEY]: payload });
 
   const pwaUrl = await resolvePwaUrl();
@@ -141,13 +162,16 @@ export async function deliverImportToPwa(payload: ExtensionImportPayload): Promi
   if (!opened.ok) {
     throw new Error(opened.error);
   }
-  const tab = opened.tab;
 
-  try {
-    await injectImportIntoPwaTab(tab.id, payload);
-  } catch (err) {
-    console.warn('[AccessPortal] import inject failed, PWA may fetch via runtime message', err);
+  if (opened.tab.id != null) {
+    try {
+      await injectImportIntoPwaTab(opened.tab.id, payload);
+    } catch (err) {
+      console.warn('[AccessPortal] import inject failed, PWA may fetch via runtime message', err);
+    }
   }
+
+  return { createdNewTab: opened.createdNewTab };
 }
 
 export async function readPendingImport(): Promise<ExtensionImportPayload | null> {

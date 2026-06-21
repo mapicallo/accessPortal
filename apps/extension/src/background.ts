@@ -9,15 +9,11 @@ import { extractActiveTabSelection, extractActiveTabText } from './lib/pageConte
 import { TARGET_TAB_SESSION_KEY, isInjectableWebUrl } from './lib/tabContext.js';
 
 import {
-
+  checkPwaAvailable,
   clearPendingImport,
-
   deliverImportToPwa,
-
   openOrVerifyPwaTab,
-
   readPendingImport,
-
 } from './lib/tabBridge.js';
 
 import { setLocale, t, type Locale } from './lib/i18n.js';
@@ -359,6 +355,12 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
 
 
 
+      if (message?.type === 'ap:check-pwa') {
+        const status = await checkPwaAvailable();
+        sendResponse({ ok: true, ...status });
+        return;
+      }
+
       if (message?.type === 'ap:open-pwa') {
         const opened = await openOrVerifyPwaTab();
         if (!opened.ok) {
@@ -387,8 +389,8 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
 
         }
 
-        await deliverImportToPwa(result.payload);
-        sendResponse({ ok: true });
+        const imported = await deliverImportToPwa(result.payload);
+        sendResponse({ ok: true, firstTimeAi: imported.createdNewTab });
         return;
       }
 
@@ -408,9 +410,9 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
 
         }
 
-        await deliverImportToPwa(result.payload);
+        const imported = await deliverImportToPwa(result.payload);
 
-        sendResponse({ ok: true });
+        sendResponse({ ok: true, firstTimeAi: imported.createdNewTab });
 
         return;
 
