@@ -16,10 +16,17 @@ export type AvailabilityKind = 'available' | 'downloadable' | 'downloading' | 'u
 
 export type DownloadProgressHandler = (loadedRatio: number) => void;
 
+export type PromptInput =
+  | string
+  | Array<{
+      role: 'user';
+      content: Array<{ type: 'text'; value: string } | { type: 'image'; value: Blob }>;
+    }>;
+
 export type AccessPortalSession = {
-  prompt?: (input: string, options?: { signal?: AbortSignal }) => Promise<string>;
+  prompt?: (input: PromptInput, options?: { signal?: AbortSignal }) => Promise<string>;
   promptStreaming: (
-    input: string,
+    input: PromptInput,
     options?: { signal?: AbortSignal },
   ) => ReadableStream<string> & AsyncIterable<string>;
   destroy?: () => void;
@@ -134,8 +141,8 @@ export function destroyWarmSession(): void {
   warmSession = null;
 }
 
-export async function promptStreamingText(
-  input: string,
+export async function promptStreaming(
+  input: PromptInput,
   onUpdate: (accumulated: string) => void,
   signal?: AbortSignal,
 ): Promise<string> {
@@ -153,10 +160,19 @@ export async function promptStreamingText(
   return full;
 }
 
-export async function promptText(input: string, signal?: AbortSignal): Promise<string> {
+/** @deprecated use promptStreaming */
+export async function promptStreamingText(
+  input: string,
+  onUpdate: (accumulated: string) => void,
+  signal?: AbortSignal,
+): Promise<string> {
+  return promptStreaming(input, onUpdate, signal);
+}
+
+export async function promptText(input: PromptInput, signal?: AbortSignal): Promise<string> {
   const session = warmSession;
   if (session?.prompt) return session.prompt(input, { signal });
-  return promptStreamingText(input, () => {}, signal);
+  return promptStreaming(input, () => {}, signal);
 }
 
 export function easyReadSystemPrompt(locale: Locale): string {
@@ -188,5 +204,20 @@ export function summarizeFallbackSystemPrompt(locale: Locale): string {
     'Summarize the text into concise key points.',
     'Use bullet points. Do not invent information.',
     'Reply with the summary only.',
+  ].join(' ');
+}
+
+export function describeImageSystemPrompt(locale: Locale): string {
+  if (locale === 'es') {
+    return [
+      'Eres un asistente de accesibilidad visual para AccessPortal.',
+      'Describe la imagen de forma clara para lectores de pantalla: objetos, texto visible, colores relevantes y contexto.',
+      'Si hay texto en la imagen, transcríbelo. No inventes detalles. Responde en español claro, en prosa o listas cortas.',
+    ].join(' ');
+  }
+  return [
+    'You are a visual accessibility assistant for AccessPortal.',
+    'Describe the image clearly for screen readers: objects, visible text, relevant colors, and context.',
+    'If text appears in the image, transcribe it. Do not invent details. Use clear prose or short lists.',
   ].join(' ');
 }

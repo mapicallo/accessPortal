@@ -8,7 +8,7 @@ Parte del ecosistema [AI4Context](https://www.ai4context.com).
 
 ## Estado
 
-**v0.4.0** — Fases 0–4: portal cognitivo, persistencia, adjuntos PDF/txt/md, copiar y descargar resultados.
+**v0.5.0** — Fases 0–5: portal visual (imagen → descripción accesible multimodal).
 
 Ver [docs/IMPLEMENTATION_PLAN.md](docs/IMPLEMENTATION_PLAN.md) para el roadmap completo.
 

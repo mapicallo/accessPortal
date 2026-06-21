@@ -1,5 +1,7 @@
 import './styles/base.css';
 import './styles/profiles/cognitive.css';
+import './styles/profiles/visual.css';
+import type { HistoryEntry } from './lib/db/indexedDb.js';
 import { initDb } from './lib/db/indexedDb.js';
 import {
   applyStaticTranslations,
@@ -8,14 +10,23 @@ import {
   setLocale,
   type Locale,
 } from './lib/i18n.js';
-import { loadHistoryEntry, initCognitivePortal, refreshCognitiveLabels } from './lib/portals/cognitivePortal.js';
+import {
+  loadHistoryEntry as loadCognitiveHistoryEntry,
+  initCognitivePortal,
+  refreshCognitiveLabels,
+} from './lib/portals/cognitivePortal.js';
+import {
+  initVisualPortal,
+  loadVisualHistoryEntry,
+  refreshVisualLabels,
+} from './lib/portals/visualPortal.js';
 import {
   getPreferences,
   initPreferences,
   setFontSizePreference,
   setLocalePreference,
 } from './lib/profiles/preferences.js';
-import { initProfileSelector, refreshProfileLabels } from './lib/profiles/selector.js';
+import { initProfileSelector, refreshProfileLabels, selectProfile } from './lib/profiles/selector.js';
 import { initHistoryPanel, refreshHistoryLabels } from './lib/ui/historyPanel.js';
 import { initModelStatus } from './lib/ui/modelStatus.js';
 import type { FontSizeId } from './lib/profiles/types.js';
@@ -31,11 +42,20 @@ async function registerServiceWorker(): Promise<void> {
   }
 }
 
+function openHistoryEntry(entry: HistoryEntry): void {
+  if (entry.profile === 'visual') {
+    void selectProfile('visual').then(() => loadVisualHistoryEntry(entry));
+    return;
+  }
+  void selectProfile('cognitive').then(() => loadCognitiveHistoryEntry(entry));
+}
+
 function refreshAllLabels(): void {
   applyStaticTranslations(document);
   refreshProfileLabels();
   refreshHistoryLabels();
   refreshCognitiveLabels();
+  refreshVisualLabels();
 }
 
 async function boot(): Promise<void> {
@@ -44,9 +64,10 @@ async function boot(): Promise<void> {
   await initI18nFromPreferences();
 
   initProfileSelector();
-  initHistoryPanel(loadHistoryEntry);
+  initHistoryPanel(openHistoryEntry);
   const modelStatus = initModelStatus();
   initCognitivePortal();
+  initVisualPortal();
 
   const prefs = getPreferences();
   const fontSelect = document.getElementById('font-size-select') as HTMLSelectElement | null;

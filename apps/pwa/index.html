@@ -95,10 +95,9 @@
                   <input type="radio" name="profile" value="cognitive" checked />
                   <span id="profile-cognitive-label">Cognitive</span>
                 </label>
-                <label class="ap-profile-option is-soon">
-                  <input type="radio" name="profile" value="visual" disabled aria-describedby="profile-visual-soon" />
+                <label class="ap-profile-option">
+                  <input type="radio" name="profile" value="visual" />
                   <span id="profile-visual-label">Visual</span>
-                  <span id="profile-visual-soon" class="ap-soon-badge">Soon</span>
                 </label>
                 <label class="ap-profile-option is-soon">
                   <input type="radio" name="profile" value="motor" disabled aria-describedby="profile-motor-soon" />
@@ -193,11 +192,76 @@
             </div>
           </section>
 
-          <section id="visual-portal" class="ap-portal ap-portal-placeholder" hidden>
-            <h2 class="ap-placeholder-title" id="visual-portal-title">Visual profile</h2>
-            <p class="ap-placeholder-body" id="visual-portal-body">
-              Image description portal — coming in a future version.
+          <section id="visual-portal" class="ap-portal ap-portal-visual" hidden>
+            <div class="ap-ready-strip">
+              <span class="ap-ready-strip-icon" aria-hidden="true">✓</span>
+              <span id="visual-ready-label" class="ap-ready-strip-label">Local AI is ready</span>
+            </div>
+
+            <p class="ap-portal-intro" id="visual-intro">
+              Upload or capture an image to get an accessible description. Processing stays on this device.
             </p>
+
+            <div class="ap-disclaimer" role="note" id="visual-disclaimer">
+              AI may make mistakes. Always check the original image for important details.
+            </div>
+
+            <div class="ap-visual-upload">
+              <label class="ap-btn ap-btn-primary ap-file-label" for="visual-image-input">
+                <span id="visual-upload-label">Choose image</span>
+              </label>
+              <label class="ap-btn ap-btn-secondary ap-file-label" for="visual-camera-input">
+                <span id="visual-camera-label">Take photo</span>
+              </label>
+              <input
+                type="file"
+                id="visual-image-input"
+                accept="image/png,image/jpeg,image/webp,image/gif"
+                hidden
+              />
+              <input
+                type="file"
+                id="visual-camera-input"
+                accept="image/*"
+                capture="environment"
+                hidden
+              />
+              <p id="visual-image-hint" class="ap-visual-image-hint" aria-live="polite"></p>
+            </div>
+
+            <figure id="visual-preview-wrap" class="ap-visual-preview" hidden>
+              <img id="visual-preview" alt="" />
+              <figcaption id="visual-preview-caption"></figcaption>
+            </figure>
+
+            <div class="ap-action-row">
+              <button type="button" id="describe-btn" class="ap-btn ap-btn-primary">
+                Describe image
+              </button>
+              <button type="button" id="visual-stop-btn" class="ap-btn ap-btn-ghost" hidden disabled>
+                Stop
+              </button>
+            </div>
+
+            <div id="visual-result-region" class="ap-result-region" hidden>
+              <h2 class="ap-result-heading" id="visual-result-heading">Image description</h2>
+              <p class="ap-writing" id="visual-writing-indicator" hidden aria-live="polite">Writing…</p>
+              <article
+                id="visual-result-output"
+                class="ap-result-output ap-visual-output"
+                aria-live="polite"
+                aria-atomic="true"
+              ></article>
+              <div id="visual-result-actions" class="ap-result-actions" hidden>
+                <button type="button" id="visual-copy-result-btn" class="ap-btn ap-btn-secondary">
+                  Copy result
+                </button>
+                <button type="button" id="visual-download-result-btn" class="ap-btn ap-btn-secondary">
+                  Download .txt
+                </button>
+                <p id="visual-copy-status" class="ap-copy-status" aria-live="polite"></p>
+              </div>
+            </div>
           </section>
 
           <section id="motor-portal" class="ap-portal ap-portal-placeholder" hidden>
@@ -237,7 +301,7 @@
       </main>
 
       <footer class="ap-footer">
-        <span id="version-strip" class="ap-version">v0.4.0</span>
+        <span id="version-strip" class="ap-version">v0.5.0</span>
         <span class="ap-footer-sep" aria-hidden="true">·</span>
         <a
           id="support-link"

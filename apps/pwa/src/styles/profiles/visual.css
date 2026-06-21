@@ -1,0 +1,88 @@
+/* Visual profile — high contrast, large type */
+
+.ap-portal-visual {
+  --ap-visual-bg: #ffffff;
+  --ap-visual-text: #0b0b0b;
+  --ap-visual-border: #1a1a1a;
+  --ap-visual-accent: #0047ab;
+  --ap-visual-accent-soft: rgba(0, 71, 171, 0.12);
+  color: var(--ap-visual-text);
+}
+
+.ap-portal-visual .ap-disclaimer {
+  border-left-color: var(--ap-visual-accent);
+  background: var(--ap-visual-accent-soft);
+  font-size: calc(1rem * var(--ap-font-scale));
+}
+
+.ap-portal-visual .ap-portal-intro {
+  font-size: calc(1.08rem * var(--ap-font-scale));
+  color: #222;
+  font-weight: 600;
+}
+
+.ap-visual-upload {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+#visual-image-hint {
+  margin: 0;
+  flex: 1 1 100%;
+  font-size: calc(0.92rem * var(--ap-font-scale));
+  color: var(--ap-muted);
+  line-height: 1.5;
+}
+
+.ap-visual-preview {
+  margin: 0 0 16px;
+  padding: 12px;
+  border: 2px solid var(--ap-visual-border);
+  border-radius: var(--ap-radius);
+  background: var(--ap-visual-bg);
+}
+
+.ap-visual-preview img {
+  display: block;
+  max-width: 100%;
+  max-height: 320px;
+  margin: 0 auto;
+  object-fit: contain;
+}
+
+.ap-visual-preview figcaption {
+  margin-top: 10px;
+  font-size: calc(0.9rem * var(--ap-font-scale));
+  font-weight: 600;
+  text-align: center;
+}
+
+.ap-portal-visual .ap-btn-primary {
+  background: var(--ap-visual-accent);
+}
+
+.ap-portal-visual .ap-btn-primary:hover:not(:disabled) {
+  background: #003580;
+}
+
+.ap-portal-visual .ap-btn-secondary {
+  color: var(--ap-visual-accent);
+  border-color: var(--ap-visual-accent);
+}
+
+.ap-portal-visual .ap-result-output,
+.ap-visual-output {
+  font-size: calc(1.12rem * var(--ap-font-scale));
+  line-height: 1.75;
+  border: 2px solid var(--ap-visual-border);
+  background: #fff;
+  color: var(--ap-visual-text);
+}
+
+.ap-portal-visual .ap-result-heading {
+  font-size: calc(1.15rem * var(--ap-font-scale));
+  font-weight: 800;
+}

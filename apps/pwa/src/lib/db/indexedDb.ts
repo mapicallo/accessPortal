@@ -172,3 +172,15 @@ export function historyTitleFromText(text: string, locale: Locale): string {
   if (line) return line;
   return locale === 'es' ? 'Texto adaptado' : 'Adapted text';
 }
+
+export function historyTitleForEntry(
+  mode: HistoryMode,
+  sourceText: string,
+  locale: Locale,
+): string {
+  if (mode === 'describe') {
+    const name = sourceText.trim() || (locale === 'es' ? 'Imagen' : 'Image');
+    return name.length > 72 ? `${name.slice(0, 69)}…` : name;
+  }
+  return historyTitleFromText(sourceText, locale);
+}

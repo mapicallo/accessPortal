@@ -77,7 +77,21 @@ export type MessageKey =
   | 'downloadResultBtn'
   | 'copyResultDone'
   | 'copyResultFailed'
-  | 'stoppedPartial';
+  | 'stoppedPartial'
+  | 'visualIntro'
+  | 'visualUploadBtn'
+  | 'visualCameraBtn'
+  | 'visualDescribeBtn'
+  | 'visualResultTitle'
+  | 'visualImageReady'
+  | 'visualImageResized'
+  | 'visualPreviewAlt'
+  | 'visualErrorNoImage'
+  | 'visualHistoryFrom'
+  | 'historyModeDescribe'
+  | 'errorImageTooLarge'
+  | 'errorImageUnsupported'
+  | 'errorImageFailed';
 
 const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
   en: {
@@ -162,6 +176,21 @@ const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     copyResultDone: 'Result copied to clipboard.',
     copyResultFailed: 'Could not copy. Select the text and copy manually.',
     stoppedPartial: 'Stopped. Partial result is shown below.',
+    visualIntro:
+      'Upload or capture an image to get an accessible description. Processing stays on this device.',
+    visualUploadBtn: 'Choose image',
+    visualCameraBtn: 'Take photo',
+    visualDescribeBtn: 'Describe image',
+    visualResultTitle: 'Image description',
+    visualImageReady: 'Image “{name}” loaded. Click Describe image.',
+    visualImageResized: '{name} (resized to fit model limits)',
+    visualPreviewAlt: 'Preview of {name}',
+    visualErrorNoImage: 'Choose or capture an image first.',
+    visualHistoryFrom: 'Description from: {name} (image not stored)',
+    historyModeDescribe: 'Image description',
+    errorImageTooLarge: 'Image is too large. Try a smaller file (max ~8 MB).',
+    errorImageUnsupported: 'Unsupported image type. Use PNG, JPEG, WebP, or GIF.',
+    errorImageFailed: 'Could not load this image. Try another file.',
   },
   es: {
     appSubtitle: 'By AI4Context',
@@ -245,6 +274,21 @@ const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     copyResultDone: 'Resultado copiado al portapapeles.',
     copyResultFailed: 'No se pudo copiar. Selecciona el texto y cópialo manualmente.',
     stoppedPartial: 'Detenido. El resultado parcial aparece abajo.',
+    visualIntro:
+      'Sube o captura una imagen para obtener una descripción accesible. El procesamiento se queda en este dispositivo.',
+    visualUploadBtn: 'Elegir imagen',
+    visualCameraBtn: 'Hacer foto',
+    visualDescribeBtn: 'Describir imagen',
+    visualResultTitle: 'Descripción de la imagen',
+    visualImageReady: 'Imagen “{name}” cargada. Pulsa Describir imagen.',
+    visualImageResized: '{name} (redimensionada para el modelo)',
+    visualPreviewAlt: 'Vista previa de {name}',
+    visualErrorNoImage: 'Elige o captura una imagen primero.',
+    visualHistoryFrom: 'Descripción de: {name} (imagen no guardada)',
+    historyModeDescribe: 'Descripción de imagen',
+    errorImageTooLarge: 'Imagen demasiado grande. Prueba un archivo más pequeño (máx. ~8 MB).',
+    errorImageUnsupported: 'Tipo de imagen no admitido. Usa PNG, JPEG, WebP o GIF.',
+    errorImageFailed: 'No se pudo cargar esta imagen. Prueba con otra.',
   },
 };
 
@@ -317,8 +361,17 @@ export function applyStaticTranslations(root: ParentNode = document): void {
     ['profile-motor-soon', 'profileComingSoon'],
     ['font-size-label', 'fontSizeLabel'],
     ['history-btn', 'historyBtn'],
-    ['visual-portal-title', 'visualPortalTitle'],
-    ['visual-portal-body', 'visualPortalBody'],
+    ['visual-ready-label', 'stateReady'],
+    ['visual-intro', 'visualIntro'],
+    ['visual-disclaimer', 'aiDisclaimer'],
+    ['visual-upload-label', 'visualUploadBtn'],
+    ['visual-camera-label', 'visualCameraBtn'],
+    ['describe-btn', 'visualDescribeBtn'],
+    ['visual-stop-btn', 'stopBtn'],
+    ['visual-result-heading', 'visualResultTitle'],
+    ['visual-writing-indicator', 'writing'],
+    ['visual-copy-result-btn', 'copyResultBtn'],
+    ['visual-download-result-btn', 'downloadResultBtn'],
     ['motor-portal-title', 'motorPortalTitle'],
     ['motor-portal-body', 'motorPortalBody'],
     ['attach-document-label', 'attachDocument'],

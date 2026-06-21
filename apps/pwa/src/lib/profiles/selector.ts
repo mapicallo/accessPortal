@@ -78,7 +78,6 @@ export function refreshProfileLabels(): void {
     ['profile-cognitive-label', 'profileCognitive'],
     ['profile-visual-label', 'profileVisual'],
     ['profile-motor-label', 'profileMotor'],
-    ['profile-visual-soon', 'profileComingSoon'],
     ['profile-motor-soon', 'profileComingSoon'],
     ['font-size-label', 'fontSizeLabel'],
     ['history-btn', 'historyBtn'],

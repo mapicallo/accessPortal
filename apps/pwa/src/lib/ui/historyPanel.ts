@@ -2,7 +2,7 @@ import {
   addHistoryEntry,
   clearHistory,
   deleteHistoryEntry,
-  historyTitleFromText,
+  historyTitleForEntry,
   listHistory,
   type HistoryEntry,
 } from '../db/indexedDb.js';
@@ -44,7 +44,9 @@ function formatWhen(ts: number, locale: string): string {
 }
 
 function modeLabel(mode: HistoryMode): string {
-  return mode === 'summary' ? t('historyModeSummary') : t('historyModeEasyRead');
+  if (mode === 'summary') return t('historyModeSummary');
+  if (mode === 'easyRead') return t('historyModeEasyRead');
+  return t('historyModeDescribe');
 }
 
 function renderList(entries: HistoryEntry[]): void {
@@ -140,7 +142,7 @@ export async function saveToHistory(payload: HistorySavePayload): Promise<void> 
   await addHistoryEntry({
     profile: getActiveProfile(),
     mode: payload.mode,
-    title: historyTitleFromText(payload.sourceText, getLocale()),
+    title: historyTitleForEntry(payload.mode, payload.sourceText, getLocale()),
     sourceText: payload.sourceText,
     resultText: payload.resultText,
   });
