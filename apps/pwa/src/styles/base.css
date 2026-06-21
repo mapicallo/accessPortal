@@ -394,6 +394,17 @@ body {
   line-height: 1.45;
 }
 
+.ap-import-banner {
+  margin: 0 0 14px;
+  padding: 10px 12px;
+  border-radius: var(--ap-radius);
+  background: rgba(40, 167, 69, 0.12);
+  color: #1e7e34;
+  font-weight: 600;
+  font-size: calc(0.9rem * var(--ap-font-scale));
+  line-height: 1.45;
+}
+
 .ap-action-row {
   display: flex;
   flex-wrap: wrap;

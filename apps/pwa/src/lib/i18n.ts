@@ -91,7 +91,9 @@ export type MessageKey =
   | 'historyModeDescribe'
   | 'errorImageTooLarge'
   | 'errorImageUnsupported'
-  | 'errorImageFailed';
+  | 'errorImageFailed'
+  | 'importBannerPage'
+  | 'importBannerSelection';
 
 const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
   en: {
@@ -191,6 +193,8 @@ const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     errorImageTooLarge: 'Image is too large. Try a smaller file (max ~8 MB).',
     errorImageUnsupported: 'Unsupported image type. Use PNG, JPEG, WebP, or GIF.',
     errorImageFailed: 'Could not load this image. Try another file.',
+    importBannerPage: 'Page sent from extension',
+    importBannerSelection: 'Selection sent from extension',
   },
   es: {
     appSubtitle: 'By AI4Context',
@@ -289,6 +293,8 @@ const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     errorImageTooLarge: 'Imagen demasiado grande. Prueba un archivo más pequeño (máx. ~8 MB).',
     errorImageUnsupported: 'Tipo de imagen no admitido. Usa PNG, JPEG, WebP o GIF.',
     errorImageFailed: 'No se pudo cargar esta imagen. Prueba con otra.',
+    importBannerPage: 'Página enviada desde la extensión',
+    importBannerSelection: 'Selección enviada desde la extensión',
   },
 };
 

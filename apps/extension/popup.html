@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AccessPortal</title>
+    <link rel="icon" type="image/png" sizes="48x48" href="./icons/icon48.png" />
+  </head>
+  <body>
+    <div class="apx-shell">
+      <header class="apx-header">
+        <img src="./icons/icon48.png" width="36" height="36" alt="" />
+        <h1 id="popup-title" class="apx-title">Send content to AccessPortal</h1>
+      </header>
+
+      <p id="popup-status" class="apx-status" aria-live="polite">Ready</p>
+
+      <div class="apx-actions">
+        <button type="button" id="open-pwa-btn" class="apx-btn apx-btn-primary">Open AccessPortal</button>
+        <button type="button" id="use-page-btn" class="apx-btn apx-btn-secondary">Use this page</button>
+        <button type="button" id="use-selection-btn" class="apx-btn apx-btn-secondary">Use selection</button>
+      </div>
+
+      <label class="apx-lang" for="locale-select">
+        <select id="locale-select" aria-label="Language">
+          <option value="en">English</option>
+          <option value="es">Español</option>
+        </select>
+      </label>
+
+      <p id="popup-footer" class="apx-footer">Text is processed locally in the AccessPortal PWA.</p>
+    </div>
+    <script type="module" src="/src/popup.ts"></script>
+  </body>
+</html>

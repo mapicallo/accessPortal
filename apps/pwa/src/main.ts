@@ -11,6 +11,7 @@ import {
   type Locale,
 } from './lib/i18n.js';
 import {
+  applyImportedContent,
   loadHistoryEntry as loadCognitiveHistoryEntry,
   initCognitivePortal,
   refreshCognitiveLabels,
@@ -30,6 +31,8 @@ import { initProfileSelector, refreshProfileLabels, selectProfile } from './lib/
 import { initHistoryPanel, refreshHistoryLabels } from './lib/ui/historyPanel.js';
 import { initModelStatus } from './lib/ui/modelStatus.js';
 import type { FontSizeId } from './lib/profiles/types.js';
+import { initExtensionImport, tryFetchImportViaExtension } from './lib/bridge/extensionImport.js';
+import type { ExtensionImportPayload } from './lib/bridge/types.js';
 
 async function registerServiceWorker(): Promise<void> {
   if (!('serviceWorker' in navigator)) return;
@@ -58,6 +61,10 @@ function refreshAllLabels(): void {
   refreshVisualLabels();
 }
 
+function handleExtensionImport(payload: ExtensionImportPayload): void {
+  void selectProfile('cognitive').then(() => applyImportedContent(payload));
+}
+
 async function boot(): Promise<void> {
   await initDb();
   await initPreferences();
@@ -68,6 +75,12 @@ async function boot(): Promise<void> {
   const modelStatus = initModelStatus();
   initCognitivePortal();
   initVisualPortal();
+  initExtensionImport(handleExtensionImport);
+
+  void modelStatus.whenReady().then(async () => {
+    const viaExtension = await tryFetchImportViaExtension();
+    if (viaExtension) handleExtensionImport(viaExtension);
+  });
 
   const prefs = getPreferences();
   const fontSelect = document.getElementById('font-size-select') as HTMLSelectElement | null;

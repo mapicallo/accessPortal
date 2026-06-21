@@ -5,6 +5,7 @@ import {
   truncateForModel,
 } from '../ai/modelOptions.js';
 import { streamSummarizeKeyPoints } from '../ai/summarizer.js';
+import type { ExtensionImportPayload } from '../bridge/types.js';
 import type { HistoryEntry } from '../db/indexedDb.js';
 import { documentErrorMessage, parseDocumentFile } from '../documentContext.js';
 import { getLocale, t } from '../i18n.js';
@@ -230,6 +231,37 @@ async function attachDocumentFromFile(file: File): Promise<void> {
   lastResultMode = null;
   updateResultActions();
   ta.focus();
+}
+
+function importBanner(): HTMLElement | null {
+  return document.getElementById('import-banner');
+}
+
+function showImportBanner(payload: ExtensionImportPayload): void {
+  const banner = importBanner();
+  if (!banner) return;
+
+  const label =
+    payload.kind === 'selection' ? t('importBannerSelection') : t('importBannerPage');
+  let msg = `${label}: ${payload.title}`;
+  if (payload.truncated) msg += ` ${t('charTruncated', { max: MAX_INPUT_CHARS })}`;
+  banner.textContent = msg;
+  banner.removeAttribute('hidden');
+}
+
+export function applyImportedContent(payload: ExtensionImportPayload): void {
+  const ta = sourceTextarea();
+  if (ta) ta.value = payload.text;
+  updateCharHint();
+  documentHint()?.replaceChildren();
+  showImportBanner(payload);
+
+  resultRegion()?.setAttribute('hidden', '');
+  lastResultText = '';
+  lastResultMode = null;
+  updateResultActions();
+
+  ta?.focus();
 }
 
 export function loadHistoryEntry(entry: HistoryEntry): void {
