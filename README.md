@@ -46,7 +46,7 @@ npm install
 npm run build
 ```
 
-Carga `apps/extension/dist/` en `chrome://extensions` (modo desarrollador).  
+Carga la extensión en `chrome://extensions` (modo desarrollador) — **clic en el icono** abre el panel flotante (movible, redimensionable, cerrable). Tras `npm run build`, recarga la extensión en `apps/extension/dist/`.  
 Empaqueta con `npm run pack` → `AccessPortal-extension-v1.0.0.zip`.
 
 Genera capturas y mosaicos CWS:

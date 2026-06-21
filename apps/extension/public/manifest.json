@@ -1,11 +1,10 @@
 {
   "manifest_version": 3,
   "name": "AccessPortal — make web content more accessible in Chrome",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Adaptive web accessibility with Chrome's built-in AI. Private, on-device.",
   "action": {
     "default_title": "AccessPortal",
-    "default_popup": "popup.html",
     "default_icon": {
       "16": "icons/icon16.png",
       "48": "icons/icon48.png",

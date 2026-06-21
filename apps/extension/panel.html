@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AccessPortal</title>
+    <link rel="icon" type="image/png" sizes="48x48" href="./icons/icon48.png" />
+  </head>
+  <body>
+    <div id="app" class="apx-shell">
+      <header class="apx-brand-header">
+        <div class="apx-brand-row">
+          <div class="apx-logo">
+            <div class="apx-logo-icon" aria-hidden="true">
+              <img src="./icons/icon48.png" width="44" height="44" alt="" />
+            </div>
+            <div class="apx-logo-text">
+              <h1 class="apx-app-title">AccessPortal</h1>
+              <p class="apx-app-subtitle" id="header-subtitle">By AI4Context</p>
+            </div>
+          </div>
+          <label class="apx-lang-selector" for="locale-select">
+            <span class="apx-lang-label" id="lang-label">Language</span>
+            <select id="locale-select" aria-label="Language">
+              <option value="en">English</option>
+              <option value="es">Español</option>
+            </select>
+          </label>
+        </div>
+      </header>
+
+      <main class="apx-scroll">
+        <section id="bridge-panel" class="apx-bridge">
+          <div id="apx-ready-strip" class="apx-ready-strip">
+            <span class="apx-ready-strip-icon" aria-hidden="true">✓</span>
+            <span id="ready-strip-label" class="apx-ready-strip-label">Bridge ready</span>
+          </div>
+
+          <div class="apx-bridge-toolbar">
+            <div class="apx-bridge-toolbar-start">
+              <button type="button" id="open-pwa-btn" class="apx-btn apx-btn-primary">
+                Open AccessPortal
+              </button>
+              <button type="button" id="use-page-btn" class="apx-btn apx-btn-ghost">
+                Use this page
+              </button>
+              <button type="button" id="use-selection-btn" class="apx-btn apx-btn-ghost">
+                Use selection
+              </button>
+            </div>
+          </div>
+
+          <p id="bridge-hint" class="apx-bridge-hint">
+            Send visible page text or a selection to the AccessPortal PWA for local AI adaptations.
+          </p>
+
+          <p id="panel-status" class="apx-status" aria-live="polite"></p>
+        </section>
+      </main>
+
+      <div class="apx-version-strip" id="version-strip">v1.1.0</div>
+
+      <footer class="apx-site-footer" role="contentinfo">
+        <div class="apx-site-footer-inner">
+          <div class="apx-footer-brand-cluster">
+            <span class="apx-footer-accent" aria-hidden="true"></span>
+            <img
+              class="apx-footer-brand-img"
+              src="./icons/icon48.png"
+              width="32"
+              height="32"
+              alt=""
+            />
+          </div>
+          <span class="apx-footer-by">
+            <span id="footer-by-prefix">by</span> <strong>AI4Context</strong>
+          </span>
+          <span class="apx-footer-divider" aria-hidden="true"></span>
+          <a
+            class="apx-footer-support"
+            id="footer-support"
+            href="https://github.com/mapicallo/accessPortal/issues"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Support</a
+          >
+          <span class="apx-footer-divider" aria-hidden="true"></span>
+          <a href="#" id="privacy-link" class="apx-footer-support">Privacy</a>
+        </div>
+      </footer>
+    </div>
+    <script type="module" src="/src/panel.ts"></script>
+  </body>
+</html>

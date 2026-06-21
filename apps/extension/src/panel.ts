@@ -1,14 +1,22 @@
-import './popup.css';
-import { applyPopupLabels, getLocale, pageErrorMessage, setLocale, t } from './lib/i18n.js';
+import './panel.css';
+import {
+  applyPanelLabels,
+  getLocale,
+  pageErrorMessage,
+  setLocale,
+  t,
+  type Locale,
+} from './lib/i18n.js';
 import { openPrivacyPolicy } from './lib/privacyUrl.js';
 
-const statusEl = document.getElementById('popup-status');
+const statusEl = document.getElementById('panel-status');
 const localeSelect = document.getElementById('locale-select') as HTMLSelectElement | null;
 
-function setStatus(text: string, isError = false): void {
+function setStatus(text: string, tone: 'idle' | 'error' | 'success' = 'idle'): void {
   if (!statusEl) return;
   statusEl.textContent = text;
-  statusEl.classList.toggle('is-error', isError);
+  statusEl.classList.toggle('is-error', tone === 'error');
+  statusEl.classList.toggle('is-success', tone === 'success');
 }
 
 function setBusy(busy: boolean): void {
@@ -29,16 +37,16 @@ async function send(type: 'ap:open-pwa' | 'ap:use-page' | 'ap:use-selection'): P
     });
     if (response?.ok) {
       if (type === 'ap:open-pwa') {
-        setStatus(t('statusReady'));
+        setStatus(t('statusOpenPwa'), 'success');
       } else {
-        setStatus(t('statusSent'));
+        setStatus(t('statusSent'), 'success');
       }
     } else {
-      setStatus(pageErrorMessage(String(response?.error ?? 'errorGeneric')), true);
+      setStatus(pageErrorMessage(String(response?.error ?? 'errorGeneric')), 'error');
     }
   } catch (err) {
-    console.error('[AccessPortal popup]', err);
-    setStatus(t('errorGeneric'), true);
+    console.error('[AccessPortal panel]', err);
+    setStatus(t('errorGeneric'), 'error');
   } finally {
     setBusy(false);
   }
@@ -51,13 +59,14 @@ async function boot(): Promise<void> {
   if (localeSelect) {
     localeSelect.value = getLocale();
     localeSelect.addEventListener('change', () => {
-      setLocale(localeSelect.value === 'es' ? 'es' : 'en');
-      applyPopupLabels();
+      const next: Locale = localeSelect.value === 'es' ? 'es' : 'en';
+      setLocale(next);
+      applyPanelLabels();
       setStatus(t('statusReady'));
     });
   }
 
-  applyPopupLabels();
+  applyPanelLabels();
   setStatus(t('statusReady'));
 
   await chrome.runtime.sendMessage({ type: 'ap:remember-tab' });
@@ -74,7 +83,8 @@ async function boot(): Promise<void> {
     void send('ap:use-selection');
   });
 
-  document.getElementById('privacy-link')?.addEventListener('click', () => {
+  document.getElementById('privacy-link')?.addEventListener('click', (e) => {
+    e.preventDefault();
     openPrivacyPolicy(getLocale());
   });
 }
