@@ -13,7 +13,10 @@ import { openPrivacyPolicy } from './lib/privacyUrl.js';
 const statusEl = document.getElementById('panel-status');
 const readyStrip = document.getElementById('apx-ready-strip');
 const readyStripLabel = document.getElementById('ready-strip-label');
+const pwaTabNotice = document.getElementById('pwa-tab-notice');
 const localeSelect = document.getElementById('locale-select') as HTMLSelectElement | null;
+
+let flashTimer: ReturnType<typeof window.setTimeout> | null = null;
 
 let pwaReachable = false;
 let pwaChecked = false;
@@ -38,10 +41,33 @@ function setReadyStrip(state: 'checking' | 'ready' | 'unavailable'): void {
 }
 
 function setBusy(busy: boolean): void {
-  for (const id of ['open-pwa-btn', 'use-page-btn', 'use-selection-btn']) {
+  for (const id of ['open-pwa-btn', 'use-page-btn', 'use-selection-btn', 'focus-pwa-btn']) {
     const btn = document.getElementById(id) as HTMLButtonElement | null;
-    if (btn) btn.disabled = busy || (id !== 'open-pwa-btn' && !pwaReachable && pwaChecked);
+    if (btn) btn.disabled = busy || (id !== 'open-pwa-btn' && id !== 'focus-pwa-btn' && !pwaReachable && pwaChecked);
   }
+}
+
+function hidePwaTabNotice(): void {
+  pwaTabNotice?.setAttribute('hidden', '');
+  pwaTabNotice?.classList.remove('is-flash');
+  if (flashTimer) {
+    window.clearTimeout(flashTimer);
+    flashTimer = null;
+  }
+}
+
+function showPwaTabNotice(): void {
+  if (!pwaTabNotice) return;
+  applyPanelLabels();
+  pwaTabNotice.removeAttribute('hidden');
+  pwaTabNotice.classList.remove('is-flash');
+  void pwaTabNotice.offsetWidth;
+  pwaTabNotice.classList.add('is-flash');
+  if (flashTimer) window.clearTimeout(flashTimer);
+  flashTimer = window.setTimeout(() => {
+    pwaTabNotice?.classList.remove('is-flash');
+    flashTimer = null;
+  }, 2600);
 }
 
 async function refreshPwaStatus(): Promise<void> {
@@ -72,6 +98,7 @@ async function refreshPwaStatus(): Promise<void> {
 
 async function send(type: 'ap:open-pwa' | 'ap:use-page' | 'ap:use-selection'): Promise<void> {
   setBusy(true);
+  if (type !== 'ap:open-pwa') hidePwaTabNotice();
   if (type !== 'ap:open-pwa') setStatus(t('statusSending'));
 
   try {
@@ -83,11 +110,14 @@ async function send(type: 'ap:open-pwa' | 'ap:use-page' | 'ap:use-selection'): P
       pwaReachable = true;
       setReadyStrip('ready');
       if (type === 'ap:open-pwa') {
+        hidePwaTabNotice();
         setStatus(t('statusOpenPwa'), 'success');
       } else {
         setStatus(t(response.firstTimeAi ? 'statusSentFirstTime' : 'statusSent'), 'success');
+        showPwaTabNotice();
       }
     } else {
+      hidePwaTabNotice();
       setStatus(
         pageErrorMessage(String(response?.error ?? 'errorGeneric'), {
           url: String(response?.pwaUrl ?? ''),
@@ -124,11 +154,14 @@ async function boot(): Promise<void> {
   applyPanelLabels();
   setStatus('');
 
-  await chrome.runtime.sendMessage({ type: 'ap:remember-tab' });
   void refreshPwaStatus();
 
   document.getElementById('open-pwa-btn')?.addEventListener('click', () => {
     void send('ap:open-pwa');
+  });
+
+  document.getElementById('focus-pwa-btn')?.addEventListener('click', () => {
+    void chrome.runtime.sendMessage({ type: 'ap:focus-pwa' });
   });
 
   document.getElementById('use-page-btn')?.addEventListener('click', () => {

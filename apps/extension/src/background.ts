@@ -12,6 +12,7 @@ import {
   checkPwaAvailable,
   clearPendingImport,
   deliverImportToPwa,
+  focusAccessPortalTab,
   openOrVerifyPwaTab,
   readPendingImport,
 } from './lib/tabBridge.js';
@@ -46,25 +47,25 @@ function rememberTab(tab: chrome.tabs.Tab | undefined): void {
 
 
 async function captureActiveTabFromLastFocusedBrowserWindow(): Promise<void> {
-
   try {
-
     const wins = await chrome.windows.getAll({ populate: true });
+    const panelPrefix = chrome.runtime.getURL(PANEL_PAGE).split(/[?#]/)[0];
+
+    const focusedWin = wins.find((w) => w.focused);
+    if (focusedWin?.type === 'popup') {
+      const panelTab = focusedWin.tabs?.[0];
+      if (panelTab?.url?.split(/[?#]/)[0] === panelPrefix) {
+        return;
+      }
+    }
 
     const normal = wins.filter((w) => w.type === 'normal');
-
     const focused = normal.find((w) => w.focused) ?? normal[0];
-
     const tab = focused?.tabs?.find((x) => x.active);
-
     rememberTab(tab);
-
   } catch {
-
     /* ignore */
-
   }
-
 }
 
 
@@ -386,8 +387,8 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
 
         }
 
-        const imported = await deliverImportToPwa(result.payload);
-        sendResponse({ ok: true, firstTimeAi: imported.createdNewTab });
+        const imported = await deliverImportToPwa(result.payload, locale);
+        sendResponse({ ok: true, firstTimeAi: imported.createdNewTab, pwaTabId: imported.tabId });
         return;
       }
 
@@ -404,12 +405,18 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
 
         }
 
-        const imported = await deliverImportToPwa(result.payload);
+        const imported = await deliverImportToPwa(result.payload, locale);
 
-        sendResponse({ ok: true, firstTimeAi: imported.createdNewTab });
+        sendResponse({ ok: true, firstTimeAi: imported.createdNewTab, pwaTabId: imported.tabId });
 
         return;
 
+      }
+
+      if (message?.type === 'ap:focus-pwa') {
+        const focused = await focusAccessPortalTab();
+        sendResponse({ ok: focused });
+        return;
       }
 
 

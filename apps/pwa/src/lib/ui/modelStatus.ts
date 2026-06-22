@@ -10,6 +10,7 @@ import {
   type ModelUiState,
 } from '../ai/languageModel.js';
 import { applyStaticTranslations, getLocale, t, type MessageKey } from '../i18n.js';
+import { peekPendingImport } from '../bridge/types.js';
 import { showPortalShell, hidePortalShell } from '../profiles/selector.js';
 
 export type ModelStatusController = {
@@ -33,6 +34,17 @@ let portalReady = false;
 let readyResolve: (() => void) | null = null;
 let readyPromise: Promise<void> | null = null;
 let lastReadiness: AiReadiness | null = null;
+
+function hasIncomingImport(): boolean {
+  return peekPendingImport() !== null;
+}
+
+function statusPair(titleKey: MessageKey, detailKey: MessageKey): [MessageKey, MessageKey] {
+  if (!hasIncomingImport()) return [titleKey, detailKey];
+  if (titleKey === 'stateChecking') return [titleKey, 'stateCheckingImportDetail'];
+  if (titleKey === 'stateDownloading') return [titleKey, 'stateDownloadingImportDetail'];
+  return [titleKey, detailKey];
+}
 
 function resetReadyPromise(): void {
   readyPromise = new Promise<void>((resolve) => {
@@ -118,7 +130,7 @@ async function runPrepareFlow(): Promise<void> {
 
   try {
     setUiState('downloading');
-    setStatus('stateDownloading', 'stateDownloadingDetail');
+    setStatus(...statusPair('stateDownloading', 'stateDownloadingDetail'));
     setProgress(0);
 
     destroyWarmSession();
@@ -145,11 +157,27 @@ async function runCheckFlow(): Promise<void> {
   running = true;
   retryBtn()?.setAttribute('disabled', 'true');
 
+  const locale = getLocale();
+  let checkWatchdog: ReturnType<typeof window.setTimeout> | undefined;
+
   try {
     setUiState('checking');
-    setStatus('stateChecking', 'stateCheckingDetail');
+    setStatus(...statusPair('stateChecking', 'stateCheckingDetail'));
     statusSection()?.removeAttribute('hidden');
     hidePortalShell();
+
+    checkWatchdog = window.setTimeout(() => {
+      if (portalReady || statusSection()?.getAttribute('data-state') !== 'checking') return;
+      setUiState('downloadable');
+      setStatus('stateCheckTimeout', 'stateCheckTimeoutDetail');
+      lastReadiness = {
+        hasAnyApi: hasBuiltInAiApi(),
+        languageModel: 'unavailable',
+        summarizer: 'unavailable',
+        combined: 'downloadable',
+        timedOut: true,
+      };
+    }, 18_000);
 
     if (!hasBuiltInAiApi()) {
       setUiState('no-api');
@@ -157,7 +185,7 @@ async function runCheckFlow(): Promise<void> {
       return;
     }
 
-    lastReadiness = await checkAiReadiness();
+    lastReadiness = await checkAiReadiness(locale);
     const { combined, timedOut } = lastReadiness;
 
     if (timedOut && hasBuiltInAiApi()) {
@@ -178,6 +206,8 @@ async function runCheckFlow(): Promise<void> {
     }
 
     if (combined === 'available') {
+      // runPrepareFlow() bails when `running` is true — release the check lock first.
+      running = false;
       await runPrepareFlow();
       return;
     }
@@ -189,6 +219,7 @@ async function runCheckFlow(): Promise<void> {
     setUiState('unavailable');
     setStatus('stateUnavailable', 'stateUnavailableDetail');
   } finally {
+    if (checkWatchdog) window.clearTimeout(checkWatchdog);
     running = false;
     retryBtn()?.removeAttribute('disabled');
   }
@@ -226,7 +257,7 @@ export function initModelStatus(): ModelStatusController {
         setStatus('stateCheckTimeout', 'stateCheckTimeoutDetail');
       } else if (state && map[state]) {
         const [title, detail] = map[state]!;
-        setStatus(title, detail);
+        setStatus(...statusPair(title, detail));
       }
     },
     whenReady: () => readyPromise ?? Promise.resolve(),

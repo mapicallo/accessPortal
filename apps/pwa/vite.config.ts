@@ -8,6 +8,16 @@ export default defineConfig({
   root,
   base: './',
   publicDir: 'public',
+  server: {
+    headers: {
+      'Cache-Control': 'no-store',
+    },
+  },
+  preview: {
+    headers: {
+      'Cache-Control': 'no-store',
+    },
+  },
   build: {
     outDir: 'dist',
     emptyOutDir: true,

@@ -98,6 +98,17 @@ export type MessageKey =
   | 'errorImageFailed'
   | 'importBannerPage'
   | 'importBannerSelection'
+  | 'importLoading'
+  | 'importTextareaPlaceholder'
+  | 'stateCheckingImportDetail'
+  | 'stateDownloadingImportDetail'
+  | 'translateBtnToEs'
+  | 'translateBtnToEn'
+  | 'translateLabel'
+  | 'translateAction'
+  | 'translateLangEn'
+  | 'translateLangEs'
+  | 'translating'
   | 'motorIntro'
   | 'motorSpeechDisclaimer'
   | 'motorStartDictation'
@@ -121,7 +132,13 @@ export type MessageKey =
   | 'capabilitiesClose'
   | 'capabilitiesCanDo'
   | 'capabilitiesCannotDo'
-  | 'footerPrivacy';
+  | 'footerPrivacy'
+  | 'guideBtn'
+  | 'guideTitle'
+  | 'guideClose'
+  | 'guideProfilePickerLabel'
+  | 'guideUseProfileBtn'
+  | 'guideStepsLabel';
 
 const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
   en: {
@@ -229,6 +246,19 @@ const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     errorImageFailed: 'Could not load this image. Try another file.',
     importBannerPage: 'Page sent from extension',
     importBannerSelection: 'Selection sent from extension',
+    importLoading: 'Importing text from the extension… It will appear below in a moment.',
+    importTextareaPlaceholder: 'Reading the page and opening AccessPortal…',
+    stateCheckingImportDetail:
+      'Preparing local AI and receiving page text from the extension. First time may take up to a minute.',
+    stateDownloadingImportDetail:
+      'Downloading local AI model. Page text from the extension will appear when ready.',
+    translateBtnToEs: 'Translate to Spanish',
+    translateBtnToEn: 'Translate to English',
+    translateLabel: 'Translate to',
+    translateAction: 'Translate',
+    translateLangEn: 'English',
+    translateLangEs: 'Spanish',
+    translating: 'Translating…',
     motorIntro:
       'Use voice to draft an accessibility note inside AccessPortal. Large buttons, few steps.',
     motorSpeechDisclaimer:
@@ -254,6 +284,12 @@ const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     capabilitiesClose: 'Close',
     capabilitiesCanDo: 'Can do',
     capabilitiesCannotDo: 'Cannot do',
+    guideBtn: 'How to use AccessPortal',
+    guideTitle: 'User guide',
+    guideClose: 'Close',
+    guideProfilePickerLabel: 'View guide for profile',
+    guideUseProfileBtn: 'Switch to this profile',
+    guideStepsLabel: 'Steps',
     footerPrivacy: 'Privacy',
   },
   es: {
@@ -361,6 +397,20 @@ const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     errorImageFailed: 'No se pudo cargar esta imagen. Prueba con otra.',
     importBannerPage: 'Página enviada desde la extensión',
     importBannerSelection: 'Selección enviada desde la extensión',
+    importLoading:
+      'Importando texto desde la extensión… Aparecerá abajo en unos instantes.',
+    importTextareaPlaceholder: 'Leyendo la página y abriendo AccessPortal…',
+    stateCheckingImportDetail:
+      'Preparando la IA local y recibiendo el texto de la página. La primera vez puede tardar hasta un minuto.',
+    stateDownloadingImportDetail:
+      'Descargando el modelo de IA local. El texto de la extensión aparecerá cuando esté listo.',
+    translateBtnToEs: 'Traducir al español',
+    translateBtnToEn: 'Traducir al inglés',
+    translateLabel: 'Traducir a',
+    translateAction: 'Traducir',
+    translateLangEn: 'Inglés',
+    translateLangEs: 'Español',
+    translating: 'Traduciendo…',
     motorIntro:
       'Usa la voz para redactar una nota de accesibilidad dentro de AccessPortal. Botones grandes, pocos pasos.',
     motorSpeechDisclaimer:
@@ -386,6 +436,12 @@ const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
     capabilitiesClose: 'Cerrar',
     capabilitiesCanDo: 'Puede',
     capabilitiesCannotDo: 'No puede',
+    guideBtn: 'Cómo usar AccessPortal',
+    guideTitle: 'Guía de uso',
+    guideClose: 'Cerrar',
+    guideProfilePickerLabel: 'Ver guía para el perfil',
+    guideUseProfileBtn: 'Cambiar a este perfil',
+    guideStepsLabel: 'Pasos',
     footerPrivacy: 'Privacidad',
   },
 };
@@ -447,12 +503,18 @@ export function applyStaticTranslations(root: ParentNode = document): void {
     ['source-label', 'sourceLabel'],
     ['summarize-btn', 'summarizeBtn'],
     ['easy-read-btn', 'easyReadBtn'],
+    ['translate-label', 'translateLabel'],
+    ['translate-btn', 'translateAction'],
+    ['translate-opt-es', 'translateLangEs'],
+    ['translate-opt-en', 'translateLangEn'],
     ['stop-btn', 'stopBtn'],
     ['result-heading', 'resultHeading'],
     ['writing-indicator', 'writing'],
     ['support-link', 'footerSupport'],
     ['privacy-link', 'footerPrivacy'],
     ['capabilities-chip', 'capabilitiesBtn'],
+    ['guide-chip', 'guideBtn'],
+    ['guide-close-btn', 'guideClose'],
     ['profile-label', 'profileLabel'],
     ['profile-cognitive-label', 'profileCognitive'],
     ['profile-visual-label', 'profileVisual'],

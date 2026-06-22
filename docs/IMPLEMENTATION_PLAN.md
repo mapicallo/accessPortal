@@ -330,6 +330,72 @@ Decisión Fase 0: PWA canónica en repo `accessPortal`; integración en `code-ra
 
 ---
 
+### Fase 11 — Interacción in-page (alcance reducido) (2–3 semanas)
+
+**Objetivo:** mediar en la **pestaña web original** sin abandonar la PWA como centro de trabajo. Respuesta a propuesta de “adaptación directa del DOM” (evaluada jun 2026): **no** sustitución masiva de párrafos ni auto-relleno de formularios ajenos.
+
+**Principios (heredados del diseño):**
+- Opt-in explícito por acción (no escaneo automático al cargar cada URL).
+- IA local vía `LanguageModel` / APIs correctas (no `window.ai` / `ai.languageModel`).
+- `content script` inyectado **bajo demanda** (`scripting` + `activeTab`), no en todas las URLs al instalar.
+- Inferencia pesada en **offscreen document** o reutilizando lógica PWA; content script solo DOM + mensajes.
+
+**In scope:**
+
+| ID | Funcionalidad | Perfil | Mecanismo |
+|----|---------------|--------|-----------|
+| 11a | **Lectura fácil sobre selección** | Cognitivo | Burbuja / panel shadow-DOM junto al texto seleccionado; stream desde Nano; botón «Abrir en AccessPortal» |
+| 11b | **Describir imagen bajo demanda** | Visual | Clic en imagen sin `alt` útil → descripción local → `alt` inyectado **o** tooltip accesible (confirmación usuario) |
+| 11c | **Mensajería panel ↔ página** | — | `background.ts` orquesta `chrome.tabs.sendMessage` / `executeScript`; panel flotante actual |
+
+**Out of scope (aparcado):**
+
+| Propuesta externa | Motivo |
+|-------------------|--------|
+| Sustituir `innerHTML` de párrafos in situ | SPAs re-renderizan; confusión sobre autoría del texto; sin rollback claro |
+| Auto-relleno de formularios en webs de terceros | Plan v1 + riesgo legal/UX/CWS; Motor queda **solo en PWA** |
+| Escaneo automático de todas las `<img>` al cargar | Coste IA + falsos positivos en imágenes decorativas |
+
+**Tareas:**
+- [ ] `apps/extension/src/content/` — módulo ligero (selección, overlay, imagen).
+- [ ] `offscreen.html` + documento offscreen para `LanguageModel` (patrón MV3).
+- [ ] Mensajes: `ap:easy-read-selection`, `ap:describe-image`, `ap:restore-page`.
+- [ ] Toggle en panel: «Asistencia en esta página» (desactivado por defecto).
+- [ ] Estilos overlay accesibles (WCAG, `aria-live`, foco, cerrar).
+- [ ] Docs: actualizar `CAPABILITIES.md` con límites in-page.
+
+**Criterio de aceptación:** en artículo estático o noticia, usuario selecciona párrafo → ve lectura fácil en overlay sin perder la página; opcionalmente describe una imagen con consentimiento.
+
+**Versión extensión:** `1.2.0` · **PWA:** `0.9.0` (si comparte tipos/mensajes)
+
+---
+
+### Fase 12 — Estilos accesibles in-page (opcional) (1 semana)
+
+**Objetivo:** capa **sin IA** en la web visitada: fuente legible, espaciado, contraste alto (perfil Visual transversal).
+
+**Tareas:**
+- [ ] Inyectar hoja CSS desde content script (clase `accessportal-a11y-layer` en `<html>`).
+- [ ] Controles en panel: tamaño texto, OpenDyslexic, alto contraste.
+- [ ] Persistir preferencias en `chrome.storage.sync`.
+- [ ] Botón «Restaurar página original» (quitar clase + estilos).
+
+**Criterio de aceptación:** toggle aplica/quita estilos en pestaña activa sin romper formularios visibles.
+
+**Versión extensión:** `1.3.0`
+
+---
+
+### Fase 13 — R&D sustitución DOM (no comprometida)
+
+**Estado:** **backlog / investigación** — solo si Fase 11 demuestra demanda y hay recursos para mantener compatibilidad por tipo de sitio (WordPress, React, etc.).
+
+**Idea evaluada y rechazada para v1.x:** reemplazar nodos de texto de la web original por salida de lectura fácil (`element.innerText = …`). Ver evaluación jun 2026 en conversación de producto / prompt Gemini “Interacción Directa”.
+
+**No iniciar** hasta métricas de uso de Fase 11a.
+
+---
+
 ## Cronograma orientativo
 
 | Fase | Duración | Acumulado |
@@ -345,8 +411,11 @@ Decisión Fase 0: PWA canónica en repo `accessPortal`; integración en `code-ra
 | 8 Privacidad/i18n | 2 d | 22 d |
 | 9 Tienda | 4 d | 26 d |
 | 10 AI4Context | 1 d | 27 d |
+| 11 In-page (reducido) | 10–15 d | ~40 d |
+| 12 Estilos in-page | 5 d | ~45 d |
+| 13 R&D DOM | — | backlog |
 
-*Estimación solo desarrollo; revisión CWS aparte.*
+*Estimación solo desarrollo; revisión CWS aparte. Fases 11–13 post-lanzamiento v1.0.*
 
 ---
 
@@ -359,6 +428,9 @@ Decisión Fase 0: PWA canónica en repo `accessPortal`; integración en `code-ra
 | Usuario espera adaptar cualquier URL | Copy claro; extensión Fase 6 |
 | PWA sin IA en móvil | Detectar `unavailable` + mensaje “usa Chrome en escritorio” |
 | WCAG audit falla | Probar NVDA/VoiceOver cada fase; checklist axe en CI opcional |
+| In-page rompe SPAs | Fase 11: overlay, no sustitución DOM; Fase 13 solo R&D |
+| Auto-relleno formularios web | Explícitamente fuera de alcance; Motor solo en PWA |
+| Content script en todas las URLs | Inyección bajo demanda; permisos ya amplios — minimizar superficie |
 
 ---
 
@@ -373,7 +445,7 @@ Decisión Fase 0: PWA canónica en repo `accessPortal`; integración en `code-ra
 
 ## Próximo paso inmediato
 
-**Ejecutar Fase 0:** scaffold `apps/pwa`, primer commit en https://github.com/mapicallo/accessPortal, validar build local.
+**Ejecutar Fase 10:** catálogo AI4Context + deploy PWA en `ai4context.com`. Fases 11–13 (interacción in-page) **después** de v1.0 en tienda.
 
 ---
 

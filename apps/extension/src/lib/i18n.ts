@@ -14,6 +14,8 @@ export type MessageKey =
   | 'statusSending'
   | 'statusSent'
   | 'statusSentFirstTime'
+  | 'pwaTabReadyNotice'
+  | 'focusPwaTabBtn'
   | 'statusOpenPwa'
   | 'statusCancelled'
   | 'errorNoTab'
@@ -44,9 +46,12 @@ const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
       'Choose what to send to AccessPortal. Processing stays on your device with Chrome’s built-in AI.',
     statusReady: 'Open an article or page, then choose how much text to adapt.',
     statusSending: 'Reading the page and opening AccessPortal…',
-    statusSent: 'Done. Switch to the AccessPortal tab to summarize or simplify.',
+    statusSent:
+      'Done. AccessPortal is loading your text in the background — switch to that tab when ready.',
     statusSentFirstTime:
-      'Done. In the AccessPortal tab, wait for local AI to get ready (first time may take a minute), then use Summarize or Easy read.',
+      'Done. AccessPortal is preparing local AI and loading page text. Switch to that tab to follow progress.',
+    pwaTabReadyNotice: 'AccessPortal tab is ready — look for the highlighted tab above.',
+    focusPwaTabBtn: 'Go to AccessPortal tab',
     statusOpenPwa: 'AccessPortal is open. Use Adapt this page from another tab to send content.',
     statusCancelled: 'Cancelled on the page.',
     errorNoTab: 'No readable browser tab found. Open a normal web page first.',
@@ -80,9 +85,13 @@ const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
       'Elige qué enviar a AccessPortal. El procesamiento se queda en tu dispositivo con la IA integrada de Chrome.',
     statusReady: 'Abre un artículo o página y elige cuánto texto quieres adaptar.',
     statusSending: 'Leyendo la página y abriendo AccessPortal…',
-    statusSent: 'Hecho. Cambia a la pestaña AccessPortal para resumir o simplificar.',
+    statusSent:
+      'Hecho. AccessPortal carga el texto en segundo plano — cambia a esa pestaña cuando quieras.',
     statusSentFirstTime:
-      'Hecho. En la pestaña AccessPortal, espera a que la IA local esté lista (la primera vez puede tardar un minuto) y usa Resumir o Lectura fácil.',
+      'Hecho. AccessPortal prepara la IA local y carga el texto. Cambia a esa pestaña para seguir el progreso.',
+    pwaTabReadyNotice:
+      'La pestaña AccessPortal ya está lista — fíjate en la pestaña resaltada arriba.',
+    focusPwaTabBtn: 'Ir a la pestaña AccessPortal',
     statusOpenPwa:
       'AccessPortal está abierto. Desde otra pestaña usa Adaptar esta página para enviar contenido.',
     statusCancelled: 'Cancelado en la página.',
@@ -157,6 +166,8 @@ export function applyPanelLabels(): void {
     ['footer-by-prefix', 'footerByPrefix'],
     ['footer-support', 'footerSupport'],
     ['privacy-link', 'footerPrivacy'],
+    ['pwa-tab-notice-text', 'pwaTabReadyNotice'],
+    ['focus-pwa-btn', 'focusPwaTabBtn'],
   ];
   for (const [id, key] of map) {
     const el = document.getElementById(id);

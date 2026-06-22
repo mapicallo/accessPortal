@@ -17,9 +17,8 @@
   },
   "permissions": ["storage", "activeTab", "scripting", "tabs"],
   "host_permissions": [
-    "http://localhost/*",
-    "http://127.0.0.1/*",
-    "https://www.ai4context.com/*"
+    "http://*/*",
+    "https://*/*"
   ],
   "externally_connectable": {
     "matches": [

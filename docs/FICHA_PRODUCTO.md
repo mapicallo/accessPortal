@@ -1,6 +1,6 @@
 # AccessPortal — Ficha de producto (Chrome Web Store)
 
-**Versión extensión:** 1.0.0 · **Fecha:** June 2026  
+**Versión extensión:** 1.1.0 · **Fecha:** June 2026  
 **Repositorio:** https://github.com/mapicallo/accessPortal
 
 ---
@@ -151,6 +151,6 @@ cd apps/extension
 npm run pack
 ```
 
-Output: `AccessPortal-extension-v1.0.0.zip`
+Output: `AccessPortal-extension-v1.1.0.zip`
 
 See [CHROME_WEB_STORE.md](./CHROME_WEB_STORE.md) for submission checklist.

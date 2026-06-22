@@ -5,6 +5,8 @@ import {
   truncateForModel,
 } from '../ai/modelOptions.js';
 import { streamSummarizeKeyPoints } from '../ai/summarizer.js';
+import { streamTranslate } from '../ai/translate.js';
+import { getTranslateTargetLocale } from '../textLanguage.js';
 import type { ExtensionImportPayload } from '../bridge/types.js';
 import type { HistoryEntry } from '../db/indexedDb.js';
 import { documentErrorMessage, parseDocumentFile } from '../documentContext.js';
@@ -70,6 +72,14 @@ function easyReadBtn(): HTMLButtonElement | null {
   return document.getElementById('easy-read-btn') as HTMLButtonElement | null;
 }
 
+function translateBtn(): HTMLButtonElement | null {
+  return document.getElementById('translate-btn') as HTMLButtonElement | null;
+}
+
+function translateTargetSelect(): HTMLSelectElement | null {
+  return document.getElementById('translate-target-select') as HTMLSelectElement | null;
+}
+
 function stopBtn(): HTMLButtonElement | null {
   return document.getElementById('stop-btn') as HTMLButtonElement | null;
 }
@@ -82,11 +92,22 @@ function updateCharHint(): void {
   const len = ta.value.length;
   hint.textContent = t('charCount', { count: len });
   hint.classList.toggle('is-warn', len > MAX_INPUT_CHARS);
+  syncTranslateTargetDefault();
+}
+
+function syncTranslateTargetDefault(): void {
+  const select = translateTargetSelect();
+  const ta = sourceTextarea();
+  if (!select || !ta?.value.trim() || ta.dataset.apImportPlaceholder === '1') return;
+  const target = getTranslateTargetLocale(ta.value, getLocale());
+  select.value = target;
 }
 
 function setBusy(busy: boolean): void {
   summarizeBtn()?.toggleAttribute('disabled', busy);
   easyReadBtn()?.toggleAttribute('disabled', busy);
+  translateBtn()?.toggleAttribute('disabled', busy);
+  translateTargetSelect()?.toggleAttribute('disabled', busy);
   attachLabel()?.classList.toggle('is-disabled', busy);
   documentInput()?.toggleAttribute('disabled', busy);
 
@@ -237,6 +258,35 @@ function importBanner(): HTMLElement | null {
   return document.getElementById('import-banner');
 }
 
+function importLoadingBanner(): HTMLElement | null {
+  return document.getElementById('import-loading-banner');
+}
+
+export function setImportLoading(active: boolean): void {
+  const loading = importLoadingBanner();
+  const label = document.getElementById('import-loading-label');
+  if (label) label.textContent = t('importLoading');
+  const ta = sourceTextarea();
+
+  if (active) {
+    if (loading) loading.removeAttribute('hidden');
+    if (ta) {
+      if (!ta.value.trim() || ta.dataset.apImportPlaceholder === '1') {
+        ta.value = t('importTextareaPlaceholder');
+        ta.dataset.apImportPlaceholder = '1';
+      }
+      ta.readOnly = true;
+      ta.classList.add('is-import-loading');
+    }
+    ta?.toggleAttribute('aria-busy', true);
+    return;
+  }
+
+  if (loading) loading.setAttribute('hidden', '');
+  ta?.classList.remove('is-import-loading');
+  ta?.toggleAttribute('aria-busy', false);
+}
+
 function showImportBanner(payload: ExtensionImportPayload): void {
   const banner = importBanner();
   if (!banner) return;
@@ -251,7 +301,13 @@ function showImportBanner(payload: ExtensionImportPayload): void {
 
 export function applyImportedContent(payload: ExtensionImportPayload): void {
   const ta = sourceTextarea();
-  if (ta) ta.value = payload.text;
+  if (ta) {
+    ta.readOnly = false;
+    ta.classList.remove('is-import-loading');
+    delete ta.dataset.apImportPlaceholder;
+    ta.value = payload.text;
+  }
+  setImportLoading(false);
   updateCharHint();
   documentHint()?.replaceChildren();
   showImportBanner(payload);
@@ -262,6 +318,7 @@ export function applyImportedContent(payload: ExtensionImportPayload): void {
   updateResultActions();
 
   ta?.focus();
+  syncTranslateTargetDefault();
 }
 
 export function loadHistoryEntry(entry: HistoryEntry): void {
@@ -344,6 +401,53 @@ async function runTask(
   }
 }
 
+async function runTranslate(): Promise<void> {
+  if (!isPortalReady()) return;
+
+  const raw = getInputText(false);
+  if (!raw) {
+    alert(t('errorEmpty'));
+    return;
+  }
+
+  const { text, truncated } = truncateForModel(raw);
+  const ta = sourceTextarea();
+  const hint = charHint();
+
+  abortTask(false);
+  abortController = new AbortController();
+  setBusy(true);
+  if (hint) hint.textContent = t('translating');
+
+  if (truncated && hint) {
+    hint.textContent = `${t('translating')} ${t('charTruncated', { max: MAX_INPUT_CHARS })}`;
+    hint.classList.add('is-warn');
+  }
+
+  try {
+    const select = translateTargetSelect();
+    const targetLocale: Locale = select?.value === 'en' ? 'en' : 'es';
+    await streamTranslate(
+      text,
+      targetLocale,
+      (accumulated) => {
+        if (ta) ta.value = accumulated;
+        updateCharHint();
+      },
+      abortController.signal,
+    );
+  } catch (err) {
+    if ((err as Error)?.name !== 'AbortError') {
+      console.error('[AccessPortal] translate', err);
+      alert(t('errorGeneric'));
+    }
+  } finally {
+    abortController = null;
+    setBusy(false);
+    updateCharHint();
+  }
+}
+
 export function initCognitivePortal(): void {
   const ta = sourceTextarea();
   ta?.addEventListener('input', () => {
@@ -370,6 +474,10 @@ export function initCognitivePortal(): void {
     void runTask('easyRead', 'easyReadResultTitle');
   });
 
+  translateBtn()?.addEventListener('click', () => {
+    void runTranslate();
+  });
+
   stopBtn()?.addEventListener('click', () => {
     cancelRunning();
   });
@@ -385,6 +493,16 @@ export function initCognitivePortal(): void {
 
 export function refreshCognitiveLabels(): void {
   updateCharHint();
+  const translateLabel = document.getElementById('translate-label');
+  if (translateLabel) translateLabel.textContent = t('translateLabel');
+  const translateBtnEl = translateBtn();
+  if (translateBtnEl) translateBtnEl.textContent = t('translateAction');
+  const optEs = document.getElementById('translate-opt-es');
+  const optEn = document.getElementById('translate-opt-en');
+  if (optEs) optEs.textContent = t('translateLangEs');
+  if (optEn) optEn.textContent = t('translateLangEn');
+  const importLoadingLabel = document.getElementById('import-loading-label');
+  if (importLoadingLabel) importLoadingLabel.textContent = t('importLoading');
   const label = attachLabel();
   if (label) {
     label.title = t('attachDocumentHint');

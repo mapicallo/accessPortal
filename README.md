@@ -8,7 +8,7 @@ Parte del ecosistema [AI4Context](https://www.ai4context.com).
 
 ## Estado
 
-**v1.0.0** — Extensión Chrome lista para CWS: `npm run pack`, assets de tienda, ficha y checklist.
+**v1.1.0** — Extensión Chrome lista para CWS: `npm run pack`, assets de tienda, ficha y checklist.
 
 Ver [docs/CHROME_WEB_STORE.md](docs/CHROME_WEB_STORE.md) y [docs/FICHA_PRODUCTO.md](docs/FICHA_PRODUCTO.md).
 
@@ -47,7 +47,7 @@ npm run build
 ```
 
 Carga la extensión en `chrome://extensions` (modo desarrollador) — **clic en el icono** abre el panel flotante (movible, redimensionable, cerrable). Tras `npm run build`, recarga la extensión en `apps/extension/dist/`.  
-Empaqueta con `npm run pack` → `AccessPortal-extension-v1.0.0.zip`.
+Empaqueta con `npm run pack` → `AccessPortal-extension-v1.1.0.zip`.
 
 Genera capturas y mosaicos CWS:
 

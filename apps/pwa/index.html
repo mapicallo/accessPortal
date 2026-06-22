@@ -11,6 +11,19 @@
     <title>AccessPortal</title>
     <link rel="icon" type="image/png" sizes="48x48" href="./icons/icon48.png" />
     <link rel="manifest" href="./manifest.webmanifest" />
+    <meta http-equiv="Cache-Control" content="no-store" />
+    <script>
+      (function () {
+        var host = location.hostname;
+        if (host !== 'localhost' && host !== '127.0.0.1') return;
+        if (!('serviceWorker' in navigator)) return;
+        navigator.serviceWorker.getRegistrations().then(function (regs) {
+          regs.forEach(function (r) {
+            r.unregister();
+          });
+        });
+      })();
+    </script>
   </head>
   <body>
     <div id="app" class="ap-shell">
@@ -135,6 +148,10 @@
             </div>
 
             <div id="import-banner" class="ap-import-banner" hidden role="status" aria-live="polite"></div>
+            <div id="import-loading-banner" class="ap-import-loading" hidden role="status" aria-live="polite">
+              <span class="ap-import-loading-spinner" aria-hidden="true"></span>
+              <span id="import-loading-label">Importing text from the extension…</span>
+            </div>
 
             <div class="ap-source-toolbar">
               <label class="ap-btn ap-btn-secondary ap-file-label" for="document-input">
@@ -159,6 +176,19 @@
               aria-describedby="char-hint ai-disclaimer"
             ></textarea>
             <p class="ap-char-hint" id="char-hint" aria-live="polite"></p>
+
+            <div class="ap-translate-row">
+              <label class="ap-translate-control" for="translate-target-select">
+                <span id="translate-label" class="ap-translate-label">Translate to</span>
+                <select id="translate-target-select" class="ap-translate-select" aria-labelledby="translate-label">
+                  <option value="es" id="translate-opt-es">Spanish</option>
+                  <option value="en" id="translate-opt-en">English</option>
+                </select>
+              </label>
+              <button type="button" id="translate-btn" class="ap-btn ap-btn-secondary">
+                Translate
+              </button>
+            </div>
 
             <div class="ap-action-row">
               <button type="button" id="summarize-btn" class="ap-btn ap-btn-primary">
@@ -391,10 +421,60 @@
             <div id="capabilities-content" class="ap-capabilities-scroll"></div>
           </div>
         </aside>
+
+        <aside
+          id="guide-panel"
+          class="ap-guide-panel"
+          hidden
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="guide-title"
+        >
+          <div class="ap-guide-panel-inner ap-guide-panel--cognitive">
+            <header class="ap-guide-header">
+              <h2 id="guide-title" class="ap-guide-heading">How to use AccessPortal</h2>
+              <button type="button" id="guide-close-btn" class="ap-btn ap-btn-ghost">
+                Close
+              </button>
+            </header>
+
+            <fieldset class="ap-guide-profile-picker">
+              <legend id="guide-profile-label" class="ap-guide-profile-legend">
+                View guide for profile
+              </legend>
+              <div class="ap-guide-profile-options" role="radiogroup" aria-labelledby="guide-profile-label">
+                <label class="ap-guide-profile-option">
+                  <input type="radio" name="guide-profile" value="cognitive" checked />
+                  <span id="guide-profile-cognitive-label">Cognitive</span>
+                </label>
+                <label class="ap-guide-profile-option">
+                  <input type="radio" name="guide-profile" value="visual" />
+                  <span id="guide-profile-visual-label">Visual</span>
+                </label>
+                <label class="ap-guide-profile-option">
+                  <input type="radio" name="guide-profile" value="motor" />
+                  <span id="guide-profile-motor-label">Motor</span>
+                </label>
+              </div>
+            </fieldset>
+
+            <div id="guide-content" class="ap-guide-scroll"></div>
+
+            <footer class="ap-guide-footer-actions">
+              <button type="button" id="guide-use-profile-btn" class="ap-btn ap-btn-primary">
+                Switch to this profile
+              </button>
+            </footer>
+          </div>
+        </aside>
       </main>
 
       <footer class="ap-footer">
         <span id="version-strip" class="ap-version">v0.8.0</span>
+        <span class="ap-footer-sep" aria-hidden="true">·</span>
+        <button type="button" id="guide-chip" class="ap-guide-chip">
+          How to use AccessPortal
+        </button>
         <span class="ap-footer-sep" aria-hidden="true">·</span>
         <button type="button" id="capabilities-chip" class="ap-capabilities-chip">
           What can AccessPortal do?

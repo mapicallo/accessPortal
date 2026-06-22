@@ -16,6 +16,7 @@ import {
   loadHistoryEntry as loadCognitiveHistoryEntry,
   initCognitivePortal,
   refreshCognitiveLabels,
+  setImportLoading,
 } from './lib/portals/cognitivePortal.js';
 import {
   initMotorPortal,
@@ -36,15 +37,27 @@ import {
 import { initProfileSelector, refreshProfileLabels, selectProfile } from './lib/profiles/selector.js';
 import { initHistoryPanel, refreshHistoryLabels } from './lib/ui/historyPanel.js';
 import { initCapabilitiesPanel, refreshCapabilitiesLabels } from './lib/ui/capabilitiesPanel.js';
+import { initGuidePanel, refreshGuideLabels, refreshGuidePanel } from './lib/ui/guidePanel.js';
 import { openPrivacyPolicy } from './lib/privacyUrl.js';
-import { initModelStatus } from './lib/ui/modelStatus.js';
+import { initModelStatus, isPortalReady } from './lib/ui/modelStatus.js';
 import type { FontSizeId } from './lib/profiles/types.js';
 import { initExtensionImport, tryFetchImportViaExtension } from './lib/bridge/extensionImport.js';
 import type { ExtensionImportPayload } from './lib/bridge/types.js';
+import { peekPendingImport } from './lib/bridge/types.js';
+
+function isLocalPreviewHost(): boolean {
+  const host = globalThis.location?.hostname ?? '';
+  return host === 'localhost' || host === '127.0.0.1' || host === '[::1]';
+}
 
 async function registerServiceWorker(): Promise<void> {
   if (!('serviceWorker' in navigator)) return;
-  if (import.meta.env.DEV) return;
+  if (import.meta.env.DEV || isLocalPreviewHost()) {
+    // Avoid stale cached bundles during `npm run preview` on localhost.
+    const registrations = await navigator.serviceWorker.getRegistrations();
+    await Promise.all(registrations.map((registration) => registration.unregister()));
+    return;
+  }
 
   try {
     await navigator.serviceWorker.register('./sw.js', { scope: './' });
@@ -70,13 +83,25 @@ function refreshAllLabels(): void {
   refreshProfileLabels();
   refreshHistoryLabels();
   refreshCapabilitiesLabels();
+  refreshGuideLabels();
   refreshCognitiveLabels();
   refreshVisualLabels();
   refreshMotorLabels();
 }
 
-function handleExtensionImport(payload: ExtensionImportPayload): void {
+function applyImport(payload: ExtensionImportPayload): void {
   void selectProfile('cognitive').then(() => applyImportedContent(payload));
+}
+
+let pendingImport: ExtensionImportPayload | null = null;
+
+function handleExtensionImport(payload: ExtensionImportPayload): void {
+  setImportLoading(true);
+  if (!isPortalReady()) {
+    pendingImport = payload;
+    return;
+  }
+  applyImport(payload);
 }
 
 async function boot(): Promise<void> {
@@ -84,18 +109,32 @@ async function boot(): Promise<void> {
   await initPreferences();
   await initI18nFromPreferences();
 
-  initProfileSelector();
+  initProfileSelector(() => {
+    refreshGuidePanel();
+  });
   initHistoryPanel(openHistoryEntry);
   initCapabilitiesPanel();
+  initGuidePanel();
   const modelStatus = initModelStatus();
   initCognitivePortal();
   initVisualPortal();
   initMotorPortal();
   initExtensionImport(handleExtensionImport);
 
+  if (peekPendingImport()) {
+    setImportLoading(true);
+  }
+
   void modelStatus.whenReady().then(async () => {
+    if (pendingImport || peekPendingImport()) {
+      setImportLoading(true);
+    }
+    if (pendingImport) {
+      applyImport(pendingImport);
+      pendingImport = null;
+    }
     const viaExtension = await tryFetchImportViaExtension();
-    if (viaExtension) handleExtensionImport(viaExtension);
+    if (viaExtension) applyImport(viaExtension);
   });
 
   const prefs = getPreferences();
@@ -129,6 +168,13 @@ async function boot(): Promise<void> {
   refreshAllLabels();
 
   void registerServiceWorker();
+  window.__accessPortalBoot = true;
+}
+
+declare global {
+  interface Window {
+    __accessPortalBoot?: boolean;
+  }
 }
 
 void boot();

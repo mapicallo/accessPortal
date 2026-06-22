@@ -1,7 +1,8 @@
 /**
  * Summarizer + LanguageModel availability checks.
  */
-import { SUMMARIZER_OPTIONS } from './modelOptions.js';
+import { getSummarizerOptions } from './modelOptions.js';
+import type { Locale } from '../storage.js';
 import {
   hasLanguageModelApi,
   queryLanguageModelAvailability,
@@ -10,7 +11,7 @@ import {
 import { withTimeoutKind } from './aiTimeout.js';
 
 type SummarizerGlobal = {
-  availability?: (options?: typeof SUMMARIZER_OPTIONS) => Promise<string>;
+  availability?: (options?: ReturnType<typeof getSummarizerOptions>) => Promise<string>;
 };
 
 function summarizerGlobal(): SummarizerGlobal | undefined {
@@ -28,10 +29,10 @@ export function hasSummarizerApi(): boolean {
   return Boolean(summarizerGlobal()?.availability);
 }
 
-export async function querySummarizerAvailability(): Promise<AvailabilityKind> {
+export async function querySummarizerAvailability(locale: Locale): Promise<AvailabilityKind> {
   const S = summarizerGlobal();
   if (S?.availability) {
-    const status = await S.availability(SUMMARIZER_OPTIONS);
+    const status = await S.availability(getSummarizerOptions(locale));
     return mapStatus(status);
   }
   return 'unavailable';
@@ -47,13 +48,13 @@ export type AiReadiness = {
   timedOut: boolean;
 };
 
-export async function checkAiReadiness(): Promise<AiReadiness> {
+export async function checkAiReadiness(locale: Locale): Promise<AiReadiness> {
   const [lmResult, sumResult] = await Promise.all([
     hasLanguageModelApi()
       ? withTimeoutKind(queryLanguageModelAvailability())
       : Promise.resolve({ kind: 'unavailable' as AvailabilityKind, timedOut: false }),
     hasSummarizerApi()
-      ? withTimeoutKind(querySummarizerAvailability())
+      ? withTimeoutKind(querySummarizerAvailability(locale))
       : Promise.resolve({ kind: 'unavailable' as AvailabilityKind, timedOut: false }),
   ]);
 

@@ -192,6 +192,21 @@ export function easyReadSystemPrompt(locale: Locale): string {
   ].join(' ');
 }
 
+export function translateSystemPrompt(locale: Locale): string {
+  if (locale === 'es') {
+    return [
+      'Eres un traductor para AccessPortal.',
+      'Traduce al español claro y natural. Conserva el significado y nombres propios.',
+      'Responde solo con la traducción, sin introducción ni notas.',
+    ].join(' ');
+  }
+  return [
+    'You are a translator for AccessPortal.',
+    'Translate into clear natural English. Preserve meaning and proper nouns.',
+    'Reply with the translation only, no introduction or notes.',
+  ].join(' ');
+}
+
 export function summarizeFallbackSystemPrompt(locale: Locale): string {
   if (locale === 'es') {
     return [

@@ -57,6 +57,14 @@ export function isLocalDevPwaUrl(url: string): boolean {
   }
 }
 
+/** Bypass browser disk cache after `npm run build` during local preview. */
+export function withCacheBust(url: string): string {
+  const normalized = normalizePwaUrl(url);
+  const parsed = new URL(normalized);
+  parsed.searchParams.set('ap_bust', String(Date.now()));
+  return parsed.toString();
+}
+
 /** Lightweight reachability check without opening a tab. */
 export async function checkPwaHttpReachable(pwaUrl: string): Promise<boolean> {
   try {

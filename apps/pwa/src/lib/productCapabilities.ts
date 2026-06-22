@@ -155,7 +155,7 @@ async function runtimeStatusLine(locale: Locale): Promise<string> {
       ? 'Estado: la API de IA integrada no está disponible en este Chrome.'
       : 'Status: built-in AI API is not available in this Chrome.';
   }
-  const { combined } = await checkAiReadiness();
+  const { combined } = await checkAiReadiness(locale);
   if (combined === 'unavailable') {
     return locale === 'es'
       ? 'Estado: Gemini Nano no está disponible en este equipo.'

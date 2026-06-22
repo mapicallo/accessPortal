@@ -7,7 +7,7 @@ import {
   promptText,
   summarizeFallbackSystemPrompt,
 } from './languageModel.js';
-import { SUMMARIZER_OPTIONS } from './modelOptions.js';
+import { getSummarizerOptions } from './modelOptions.js';
 import type { Locale } from '../storage.js';
 
 type SummarizerInstance = {
@@ -16,7 +16,7 @@ type SummarizerInstance = {
 };
 
 type SummarizerGlobal = {
-  create?: (options?: typeof SUMMARIZER_OPTIONS) => Promise<SummarizerInstance>;
+  create?: (options?: ReturnType<typeof getSummarizerOptions>) => Promise<SummarizerInstance>;
 };
 
 function summarizerGlobal(): SummarizerGlobal | undefined {
@@ -30,7 +30,7 @@ export async function summarizeKeyPoints(
 ): Promise<string> {
   const S = summarizerGlobal();
   if (S?.create) {
-    const summarizer = await S.create(SUMMARIZER_OPTIONS);
+    const summarizer = await S.create(getSummarizerOptions(locale));
     try {
       return await summarizer.summarize(text, { signal });
     } finally {
