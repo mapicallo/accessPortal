@@ -4,9 +4,12 @@ import { defineConfig } from 'vite';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 
+/** Production on ai4context.com: VITE_BASE_PATH=/web-extensions/access-portal/ */
+const base = process.env.VITE_BASE_PATH?.trim() || './';
+
 export default defineConfig({
   root,
-  base: './',
+  base,
   publicDir: 'public',
   server: {
     headers: {
