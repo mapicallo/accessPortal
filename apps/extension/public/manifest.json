@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "AccessPortal — make web content more accessible in Chrome",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Adaptive web accessibility with Chrome's built-in AI. Private, on-device.",
   "action": {
     "default_title": "AccessPortal",
@@ -15,7 +15,7 @@
     "service_worker": "assets/background.js",
     "type": "module"
   },
-  "permissions": ["storage", "activeTab", "scripting", "tabs"],
+  "permissions": ["storage", "activeTab", "scripting", "tabs", "offscreen"],
   "host_permissions": [
     "http://*/*",
     "https://*/*"
@@ -31,5 +31,11 @@
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
-  }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["fonts/OpenDyslexic-Regular.woff2"],
+      "matches": ["http://*/*", "https://*/*"]
+    }
+  ]
 }

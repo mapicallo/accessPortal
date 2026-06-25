@@ -1,7 +1,7 @@
 # AccessPortal — Capabilities & limits
 
 Honest matrix: what AccessPortal can and cannot do by accessibility profile.  
-**Version:** 0.8.0 · **Chrome 148+ desktop** · **Gemini Nano on-device**
+**Version:** 1.2.0 · **Chrome 148+ desktop** · **Gemini Nano on-device**
 
 AccessPortal does **not** diagnose disabilities, replace official assistive technology, or guarantee regulatory “easy read” compliance.
 
@@ -44,6 +44,8 @@ AccessPortal does **not** diagnose disabilities, replace official assistive tech
 |--------|-----------|
 | Send visible page text or selection to the open PWA (with on-page confirmation) | Monitor tabs in the background without user action |
 | Open/focus the AccessPortal PWA tab | Run on Microsoft Edge (Chrome-only built-in AI in v1) |
+| **On-page assistance (opt-in):** simplify selected text in an overlay; describe images on click; apply readable styles (OpenDyslexic, contrast, text size) | Replace entire page text in-place or auto-scan all images |
+| Restore the original page (overlay, alt text, styles) | Auto-fill forms on external websites |
 
 ---
 
@@ -65,7 +67,7 @@ AccessPortal does **not** diagnose disabilities, replace official assistive tech
 |-----------|---------------------|
 | Chrome 148+ desktop (Windows, macOS, Linux, Chromebook Plus) | Mobile parity for on-device AI |
 | PWA installable from HTTPS | Edge Add-ons |
-| Optional Chrome extension for page/selection bridge | Automatic adaptation of every website |
+| Optional Chrome extension for page/selection bridge + opt-in in-page assistance | Automatic adaptation of every website |
 
 ---
 

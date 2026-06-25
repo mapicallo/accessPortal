@@ -16,6 +16,8 @@ export default defineConfig({
       input: {
         panel: path.resolve(root, 'panel.html'),
         background: path.resolve(root, 'src/background.ts'),
+        content: path.resolve(root, 'src/content/contentMain.ts'),
+        offscreen: path.resolve(root, 'offscreen.html'),
       },
       output: {
         entryFileNames: 'assets/[name].js',

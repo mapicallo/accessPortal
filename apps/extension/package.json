@@ -1,6 +1,6 @@
 {
   "name": "@accessportal/extension",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,6 +8,8 @@
     "build": "node scripts/build-extension.mjs",
     "icons": "node scripts/write-placeholder-icons.mjs",
     "pack": "npm run build && node scripts/package-zip.mjs",
+    "prepare-dev": "npm run build --prefix ../pwa && npm run build",
+    "preview-pwa": "npm run preview --prefix ../pwa",
     "store-assets": "powershell -ExecutionPolicy Bypass -File scripts/generate-store-assets.ps1"
   },
   "devDependencies": {

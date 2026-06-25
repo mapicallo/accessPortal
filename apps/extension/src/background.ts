@@ -7,6 +7,20 @@
 import { extractActiveTabSelection, extractActiveTabText } from './lib/pageContext.js';
 
 import { TARGET_TAB_SESSION_KEY, isInjectableWebUrl } from './lib/tabContext.js';
+import {
+  applyA11yLayer,
+  clearInjectedTab,
+  disableInPage,
+  enableInPage,
+  getInPageState,
+  restorePage,
+} from './lib/inPageManager.js';
+import {
+  relayStreamChunkToTab,
+  requestDescribeImage,
+  requestEasyRead,
+} from './lib/offscreenBridge.js';
+import type { A11yLayerSettings } from './lib/messages.js';
 
 import {
   checkPwaAvailable,
@@ -17,7 +31,7 @@ import {
   readPendingImport,
 } from './lib/tabBridge.js';
 
-import { setLocale, t, type Locale } from './lib/i18n.js';
+import { getLocale, setLocale, t, type Locale } from './lib/i18n.js';
 import { resolvePwaUrl } from './lib/pwaUrl.js';
 
 
@@ -200,9 +214,9 @@ async function openAccessPortalPanel(): Promise<void> {
 
   const attempts: chrome.windows.CreateData[] = [
 
-    { url: panelUrl, type: 'popup', width: 440, height: 560, focused: true },
+    { url: panelUrl, type: 'popup', width: 440, height: 640, focused: true },
 
-    { url: panelUrl, type: 'normal', width: 460, height: 580, focused: true },
+    { url: panelUrl, type: 'normal', width: 460, height: 660, focused: true },
 
   ];
 
@@ -339,6 +353,14 @@ chrome.runtime.onStartup.addListener(() => {
 
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+  // Routed to offscreen.html — do not answer here or sendMessage() resolves too early.
+  if (
+    message?.type === 'ap:offscreen-ping' ||
+    message?.type === 'ap:offscreen-easy-read' ||
+    message?.type === 'ap:offscreen-describe-image'
+  ) {
+    return false;
+  }
 
   void (async () => {
 
@@ -419,6 +441,91 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
         return;
       }
 
+      if (message?.type === 'ap:enable-in-page') {
+        const locale = (message.locale === 'es' ? 'es' : 'en') as Locale;
+        setLocale(locale);
+        const result = await enableInPage(locale);
+        sendResponse(result);
+        return;
+      }
+
+      if (message?.type === 'ap:disable-in-page') {
+        await disableInPage();
+        sendResponse({ ok: true });
+        return;
+      }
+
+      if (message?.type === 'ap:get-in-page-state') {
+        const state = await getInPageState();
+        sendResponse({ ok: true, ...state });
+        return;
+      }
+
+      if (message?.type === 'ap:apply-a11y-layer') {
+        const a11y = message.a11y as A11yLayerSettings;
+        const result = await applyA11yLayer(a11y);
+        sendResponse({ ok: result.ok, error: result.error });
+        return;
+      }
+
+      if (message?.type === 'ap:restore-page') {
+        const result = await restorePage();
+        sendResponse({ ok: result.ok, error: result.error });
+        return;
+      }
+
+      if (message?.type === 'ap:content-easy-read' && _sender.tab?.id != null) {
+        const tabId = _sender.tab.id;
+        const locale = (message.locale === 'es' ? 'es' : 'en') as Locale;
+        await requestEasyRead(tabId, String(message.requestId), String(message.text), locale);
+        sendResponse({ ok: true });
+        return;
+      }
+
+      if (message?.type === 'ap:content-describe-image' && _sender.tab?.id != null) {
+        const tabId = _sender.tab.id;
+        const locale = (message.locale === 'es' ? 'es' : 'en') as Locale;
+        await requestDescribeImage(
+          tabId,
+          String(message.requestId),
+          locale,
+          String(message.imageDataUrl),
+          String(message.fileName),
+        );
+        sendResponse({ ok: true });
+        return;
+      }
+
+      if (message?.type === 'ap:content-open-pwa' && _sender.tab?.id != null) {
+        const locale = getLocale();
+        const imported = await deliverImportToPwa(
+          {
+            kind: 'selection',
+            title: String(message.title ?? ''),
+            url: String(message.url ?? ''),
+            text: String(message.text ?? ''),
+            truncated: false,
+            sentAt: Date.now(),
+          },
+          locale,
+        );
+        sendResponse({ ok: true, pwaTabId: imported.tabId });
+        return;
+      }
+
+      if (message?.type === 'ap:offscreen-stream') {
+        relayStreamChunkToTab({
+          type: 'ap:stream-chunk',
+          requestId: String(message.requestId),
+          tabId: Number(message.tabId),
+          text: String(message.text ?? ''),
+          done: Boolean(message.done),
+          error: message.error ? String(message.error) : undefined,
+        });
+        sendResponse({ ok: true });
+        return;
+      }
+
 
 
       if (message?.type === 'ap:fetch-import') {
@@ -484,6 +591,7 @@ chrome.runtime.onMessageExternal.addListener((_message, _sender, sendResponse) =
 
 
 chrome.tabs.onRemoved.addListener((tabId) => {
+  clearInjectedTab(tabId);
 
   void sessionLike().get('ap_pwa_tab_id').then((data) => {
 

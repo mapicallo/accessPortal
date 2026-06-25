@@ -65,9 +65,46 @@
             </button>
           </div>
         </section>
+
+        <section id="in-page-panel" class="apx-in-page">
+          <h2 class="apx-section-title" id="in-page-title">On-page assistance</h2>
+          <p class="apx-in-page-hint" id="in-page-hint">
+            Opt-in help on the current tab: simplify selected text, describe images, or apply readable styles.
+          </p>
+
+          <label class="apx-toggle-row">
+            <input type="checkbox" id="in-page-enable" />
+            <span id="in-page-enable-label">Assist on this page</span>
+          </label>
+
+          <fieldset class="apx-a11y-fieldset" id="a11y-fieldset" disabled>
+            <legend id="a11y-legend">Readable page styles</legend>
+            <label class="apx-check-row">
+              <input type="checkbox" id="a11y-dyslexic" />
+              <span id="a11y-dyslexic-label">OpenDyslexic font</span>
+            </label>
+            <label class="apx-check-row">
+              <input type="checkbox" id="a11y-contrast" />
+              <span id="a11y-contrast-label">High contrast</span>
+            </label>
+            <label class="apx-select-row" for="a11y-scale">
+              <span id="a11y-scale-label">Text size</span>
+              <select id="a11y-scale">
+                <option value="1">100%</option>
+                <option value="1.15">115%</option>
+                <option value="1.3">130%</option>
+              </select>
+            </label>
+            <button type="button" id="restore-page-btn" class="apx-btn apx-btn-ghost">
+              Restore original page
+            </button>
+          </fieldset>
+
+          <p id="in-page-status" class="apx-status apx-status-sub" aria-live="polite"></p>
+        </section>
       </main>
 
-      <div class="apx-version-strip" id="version-strip">v1.1.0</div>
+      <div class="apx-version-strip" id="version-strip">v1.2.0</div>
 
       <footer class="apx-site-footer" role="contentinfo">
         <div class="apx-site-footer-inner">

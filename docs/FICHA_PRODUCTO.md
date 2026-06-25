@@ -94,6 +94,8 @@ Parte de la familia de extensiones [AI4Context](https://www.ai4context.com).
 | `activeTab` | Access the tab the user is on when they click **Use this page** or **Use selection**. |
 | `scripting` | Inject a one-time script to read visible or selected text after user confirms on the page. |
 | `tabs` | Open or focus the AccessPortal PWA tab and pass imported text via `localStorage` bridge. |
+| `offscreen` | Run on-device LanguageModel in a hidden offscreen document when the user opts in to on-page easy-read or image description (no background monitoring). |
+| Host: `http://*/*`, `https://*/*` | Inject opt-in content scripts and load OpenDyslexic font for readable page styles on user-requested tabs only. |
 | Host: `localhost` / `127.0.0.1` | Development PWA (`vite preview`). |
 | Host: `ai4context.com` | Production PWA deployment. |
 
@@ -101,7 +103,7 @@ Parte de la familia de extensiones [AI4Context](https://www.ai4context.com).
 
 ## Single purpose
 
-Send page text or user selection to the AccessPortal PWA for **local on-device accessibility adaptations** (summarize, easy read, describe images, motor notes).
+Send page text or user selection to the AccessPortal PWA for **local on-device accessibility adaptations** (summarize, easy read, describe images, motor notes). Optional **opt-in on-page assistance** on the active tab (selection overlay, image describe, readable styles) without replacing the whole page.
 
 ---
 

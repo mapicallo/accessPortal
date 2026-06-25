@@ -12,6 +12,9 @@ function sessionLike(): chrome.storage.StorageArea {
 const PWA_TAB_SESSION_KEY = 'ap_pwa_tab_id';
 const PANEL_WINDOW_SESSION_KEY = 'ap_panel_window_id';
 
+/** PWA boot flag and import events live in the page main world, not the isolated script world. */
+const PWA_SCRIPT_WORLD = 'MAIN' as const;
+
 export type OpenPwaResult =
   | { ok: true; tab: chrome.tabs.Tab; createdNewTab: boolean }
   | { ok: false; error: 'pwa_unreachable' | 'pwa_tab_failed'; pwaUrl: string };
@@ -43,6 +46,7 @@ export async function verifyPwaTabReachable(tabId: number, pwaUrl: string): Prom
 
     const results = await chrome.scripting.executeScript({
       target: { tabId },
+      world: PWA_SCRIPT_WORLD,
       func: () =>
         Boolean(
           document.getElementById('app') &&
@@ -119,9 +123,12 @@ export async function openOrVerifyPwaTab(url?: string): Promise<OpenPwaResult> {
   }
 
   await waitForTabSettled(tab.id);
-  const reachable = await verifyPwaTabReachable(tab.id, pwaUrl);
-  if (!reachable) {
-    return { ok: false, error: 'pwa_unreachable', pwaUrl };
+  const booted = await waitForPwaBoot(tab.id);
+  if (!booted && !(await verifyPwaTabReachable(tab.id, pwaUrl))) {
+    const httpOk = await checkPwaHttpReachable(pwaUrl);
+    if (!httpOk) {
+      return { ok: false, error: 'pwa_unreachable', pwaUrl };
+    }
   }
 
   return { ok: true, tab, createdNewTab };
@@ -145,6 +152,7 @@ async function waitForPwaBoot(tabId: number, attempts = 48): Promise<boolean> {
     try {
       const results = await chrome.scripting.executeScript({
         target: { tabId },
+        world: PWA_SCRIPT_WORLD,
         func: () => Boolean((window as unknown as { __accessPortalBoot?: boolean }).__accessPortalBoot),
       });
       if (results[0]?.result === true) return true;
@@ -164,6 +172,7 @@ export async function injectImportIntoPwaTab(
 
   await chrome.scripting.executeScript({
     target: { tabId },
+    world: PWA_SCRIPT_WORLD,
     func: (data: ExtensionImportPayload, storageKey: string) => {
       localStorage.setItem(storageKey, JSON.stringify(data));
       window.dispatchEvent(new CustomEvent('accessportal-import'));
@@ -187,6 +196,7 @@ async function injectTextareaPlaceholder(tabId: number, message: string): Promis
   try {
     await chrome.scripting.executeScript({
       target: { tabId },
+      world: PWA_SCRIPT_WORLD,
       func: (msg: string) => {
         const ta = document.getElementById('source-text');
         if (!(ta instanceof HTMLTextAreaElement)) return;

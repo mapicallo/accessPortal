@@ -28,6 +28,18 @@ export type MessageKey =
   | 'errorPwaUnreachableProd'
   | 'confirmPage'
   | 'confirmSelection'
+  | 'inPageTitle'
+  | 'inPageHint'
+  | 'inPageEnable'
+  | 'a11yLegend'
+  | 'a11yDyslexic'
+  | 'a11yContrast'
+  | 'a11yScale'
+  | 'restorePage'
+  | 'inPageEnabled'
+  | 'inPageDisabled'
+  | 'inPageNoTab'
+  | 'statusPwaOfflineInPageOk'
   | 'footerByPrefix'
   | 'footerSupport'
   | 'footerPrivacy';
@@ -68,6 +80,20 @@ const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
       'AccessPortal will read visible text from this page (not your files). Continue?',
     confirmSelection:
       'AccessPortal will read the text you highlighted on this page. Continue?',
+    inPageTitle: 'On-page assistance',
+    inPageHint:
+      'Opt-in help on the current tab: simplify selected text, describe images, or apply readable styles.',
+    inPageEnable: 'Assist on this page',
+    a11yLegend: 'Readable page styles',
+    a11yDyslexic: 'OpenDyslexic font',
+    a11yContrast: 'High contrast',
+    a11yScale: 'Text size',
+    restorePage: 'Restore original page',
+    inPageEnabled: 'On-page assistance is active on this tab.',
+    inPageDisabled: 'On-page assistance turned off.',
+    inPageNoTab: 'Open a normal web page first, then enable assistance.',
+    statusPwaOfflineInPageOk:
+      'AccessPortal PWA is offline — use “Assist on this page” below (no PWA needed). To test “Adapt this page”, run npm run preview in apps/pwa.',
     footerByPrefix: 'by',
     footerSupport: 'Support',
     footerPrivacy: 'Privacy',
@@ -109,6 +135,20 @@ const MESSAGES: Record<Locale, Record<MessageKey, string>> = {
       'AccessPortal leerá el texto visible de esta página (no tus archivos). ¿Continuar?',
     confirmSelection:
       'AccessPortal leerá el texto que resaltaste en esta página. ¿Continuar?',
+    inPageTitle: 'Asistencia en la página',
+    inPageHint:
+      'Ayuda opcional en la pestaña actual: simplificar texto seleccionado, describir imágenes o aplicar estilos legibles.',
+    inPageEnable: 'Asistir en esta página',
+    a11yLegend: 'Estilos legibles en la página',
+    a11yDyslexic: 'Fuente OpenDyslexic',
+    a11yContrast: 'Alto contraste',
+    a11yScale: 'Tamaño de texto',
+    restorePage: 'Restaurar página original',
+    inPageEnabled: 'La asistencia en página está activa en esta pestaña.',
+    inPageDisabled: 'Asistencia en página desactivada.',
+    inPageNoTab: 'Abre primero una página web normal y luego activa la asistencia.',
+    statusPwaOfflineInPageOk:
+      'La PWA AccessPortal no está activa — usa «Asistir en esta página» abajo (no hace falta la PWA). Para probar «Adaptar esta página», ejecuta npm run preview en apps/pwa.',
     footerByPrefix: 'por',
     footerSupport: 'Apoyar',
     footerPrivacy: 'Privacidad',
@@ -168,6 +208,14 @@ export function applyPanelLabels(): void {
     ['privacy-link', 'footerPrivacy'],
     ['pwa-tab-notice-text', 'pwaTabReadyNotice'],
     ['focus-pwa-btn', 'focusPwaTabBtn'],
+    ['in-page-title', 'inPageTitle'],
+    ['in-page-hint', 'inPageHint'],
+    ['in-page-enable-label', 'inPageEnable'],
+    ['a11y-legend', 'a11yLegend'],
+    ['a11y-dyslexic-label', 'a11yDyslexic'],
+    ['a11y-contrast-label', 'a11yContrast'],
+    ['a11y-scale-label', 'a11yScale'],
+    ['restore-page-btn', 'restorePage'],
   ];
   for (const [id, key] of map) {
     const el = document.getElementById(id);
